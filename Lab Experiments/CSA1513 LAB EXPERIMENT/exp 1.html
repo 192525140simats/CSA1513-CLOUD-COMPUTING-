@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Reservation System</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef4f8;
+}
+
+/* LOGIN PAGE */
+#loginPage{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#1565c0,#42a5f5);
+}
+
+.login-box{
+    width:350px;
+    background:white;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 5px 20px #555;
+    text-align:center;
+}
+
+.login-box h1{
+    color:#1565c0;
+    margin-bottom:10px;
+}
+
+.login-box input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:6px;
+    box-sizing:border-box;
+}
+
+.login-btn{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    background:#1565c0;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.google-btn{
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    background:white;
+    color:#333;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:0 1px 3px #ccc;
+}
+
+.google-btn:hover{
+    background:#f5f5f5;
+}
+
+.google-icon{
+    color:#4285F4;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.divider{
+    margin:18px 0;
+    color:#777;
+}
+
+.login-message{
+    color:red;
+    margin-top:10px;
+}
+
+/* MAIN PAGE */
+
+#mainPage{
+    display:none;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.logout{
+    background:#d32f2f;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    border-radius:5px;
+    cursor:pointer;
+    float:right;
+}
+
+.container{
+    width:90%;
+    max-width:1000px;
+    margin:30px auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 12px #aaa;
+}
+
+h2{
+    color:#1565c0;
+    text-align:center;
+}
+
+.trip-type{
+    display:flex;
+    gap:25px;
+    margin-bottom:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:6px;
+}
+
+input,select{
+    width:100%;
+    padding:11px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    box-sizing:border-box;
+}
+
+.trip-type input{
+    width:auto;
+}
+
+.full{
+    grid-column:1/3;
+}
+
+.search-btn{
+    width:100%;
+    padding:13px;
+    margin-top:20px;
+    background:#1565c0;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+#result{
+    margin-top:30px;
+    display:none;
+}
+
+.flight-card{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:18px;
+    margin-top:15px;
+    box-shadow:0 2px 7px #ccc;
+    background:#fafafa;
+}
+
+.flight-card h3{
+    color:#1565c0;
+}
+
+.flight-info{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.price{
+    font-size:20px;
+    font-weight:bold;
+    color:#2e7d32;
+}
+
+.book-btn{
+    background:#2e7d32;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+footer{
+    text-align:center;
+    margin-top:30px;
+    padding:15px;
+    background:#1565c0;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+
+<div id="loginPage">
+
+<div class="login-box">
+
+<h1>✈ Flight Reservation</h1>
+
+<p>Cloud-Based SaaS Application</p>
+
+<input type="text" id="username" placeholder="Username">
+
+<input type="password" id="password" placeholder="Password">
+
+<button class="login-btn" onclick="login()">
+Login
+</button>
+
+<div class="divider">OR</div>
+
+<button class="google-btn" onclick="googleLogin()">
+<span class="google-icon">G</span>
+&nbsp; Sign in with Google
+</button>
+
+<p id="loginMessage" class="login-message"></p>
+
+</div>
+
+</div>
+
+
+<!-- MAIN PAGE -->
+
+<div id="mainPage">
+
+<header>
+
+<button class="logout" onclick="logout()">
+Logout
+</button>
+
+<h1>✈ Flight Reservation System</h1>
+
+<p>Cloud-Based SaaS Application</p>
+
+</header>
+
+<div class="container">
+
+<h2>Search Flights</h2>
+
+<div class="trip-type">
+
+<label>
+<input type="radio" name="trip" value="One Way" checked>
+One Way
+</label>
+
+<label>
+<input type="radio" name="trip" value="Round Trip">
+Round Trip
+</label>
+
+</div>
+
+<div class="form-grid">
+
+<div>
+<label>Flight Type</label>
+<select id="flightType">
+<option>Domestic</option>
+<option>International</option>
+</select>
+</div>
+
+<div>
+<label>Fare Type</label>
+<select id="fareType">
+<option>Regular Fare</option>
+<option>Student Fare</option>
+<option>Senior Citizen Fare</option>
+<option>Armed Forces Fare</option>
+</select>
+</div>
+
+<div>
+<label>From</label>
+<input type="text" id="from" placeholder="Example: Chennai">
+</div>
+
+<div>
+<label>To</label>
+<input type="text" id="to" placeholder="Example: Mumbai">
+</div>
+
+<div>
+<label>Departure</label>
+<input type="date" id="departure">
+</div>
+
+<div>
+<label>Return</label>
+<input type="date" id="returnDate">
+</div>
+
+<div>
+<label>Travelers</label>
+<select id="travelers">
+<option value="1">1 Traveler</option>
+<option value="2">2 Travelers</option>
+<option value="3">3 Travelers</option>
+<option value="4">4 Travelers</option>
+<option value="5">5 Travelers</option>
+</select>
+</div>
+
+<div>
+<label>Class</label>
+<select id="classType">
+<option>Economy</option>
+<option>Premium Economy</option>
+<option>Business</option>
+<option>First Class</option>
+</select>
+</div>
+
+<div class="full">
+
+<button class="search-btn" onclick="searchFlight()">
+🔍 Search Flights
+</button>
+
+</div>
+
+</div>
+
+<div id="result">
+
+<h2>Available Flights</h2>
+
+<div id="flightResults"></div>
+
+</div>
+
+</div>
+
+<footer>
+Cloud Computing Lab | Flight Reservation SaaS
+</footer>
+
+</div>
+
+
+<script>
+
+/* NORMAL LOGIN */
+
+function login(){
+
+let username=document.getElementById("username").value;
+let password=document.getElementById("password").value;
+
+if(username==="admin" && password==="1234"){
+
+document.getElementById("loginPage").style.display="none";
+document.getElementById("mainPage").style.display="block";
+
+}
+else{
+
+document.getElementById("loginMessage").innerHTML=
+"Invalid username or password";
+
+}
+
+}
+
+
+/* GOOGLE LOGIN DEMO */
+
+function googleLogin(){
+
+document.getElementById("loginMessage").style.color="#1565c0";
+
+document.getElementById("loginMessage").innerHTML=
+"Google Sign-In selected. Connecting to Google...";
+
+setTimeout(function(){
+
+document.getElementById("loginPage").style.display="none";
+document.getElementById("mainPage").style.display="block";
+
+},1000);
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+document.getElementById("mainPage").style.display="none";
+document.getElementById("loginPage").style.display="flex";
+
+document.getElementById("username").value="";
+document.getElementById("password").value="";
+
+}
+
+
+/* FLIGHT SEARCH */
+
+function searchFlight(){
+
+let trip=document.querySelector(
+'input[name="trip"]:checked').value;
+
+let flightType=document.getElementById("flightType").value;
+let fareType=document.getElementById("fareType").value;
+let from=document.getElementById("from").value;
+let to=document.getElementById("to").value;
+let departure=document.getElementById("departure").value;
+let travelers=parseInt(document.getElementById("travelers").value);
+let classType=document.getElementById("classType").value;
+
+if(from==="" || to==="" || departure===""){
+
+alert("Please fill From, To and Departure fields.");
+
+return;
+
+}
+
+let flights=[
+
+{
+name:"Air India",
+number:"AI-540",
+departure:"06:30 AM",
+arrival:"08:45 AM",
+duration:"2h 15m",
+price:5500
+},
+
+{
+name:"IndiGo",
+number:"6E-623",
+departure:"10:15 AM",
+arrival:"12:30 PM",
+duration:"2h 15m",
+price:4800
+},
+
+{
+name:"Vistara",
+number:"UK-820",
+departure:"02:00 PM",
+arrival:"04:20 PM",
+duration:"2h 20m",
+price:6200
+}
+
+];
+
+let result=document.getElementById("result");
+let flightResults=document.getElementById("flightResults");
+
+result.style.display="block";
+
+flightResults.innerHTML="";
+
+flights.forEach(function(flight){
+
+let total=flight.price*travelers;
+
+flightResults.innerHTML+=`
+
+<div class="flight-card">
+
+<h3>✈ ${flight.name}</h3>
+
+<p>
+<b>Flight Number:</b>
+${flight.number}
+</p>
+
+<div class="flight-info">
+
+<div>
+<b>Departure</b><br>
+${flight.departure}
+</div>
+
+<div>
+<b>Arrival</b><br>
+${flight.arrival}
+</div>
+
+<div>
+<b>Estimated Time</b><br>
+${flight.duration}
+</div>
+
+</div>
+
+<p>
+<b>Route:</b>
+${from} → ${to}
+</p>
+
+<p>
+<b>Date:</b>
+${departure}
+</p>
+
+<p>
+<b>Trip:</b>
+${trip}
+</p>
+
+<p>
+<b>Flight Type:</b>
+${flightType}
+</p>
+
+<p>
+<b>Class:</b>
+${classType}
+</p>
+
+<p>
+<b>Fare Type:</b>
+${fareType}
+</p>
+
+<p>
+<b>Travelers:</b>
+${travelers}
+</p>
+
+<p class="price">
+₹${total}
+</p>
+
+<small>
+₹${flight.price} per traveler
+</small>
+
+<br><br>
+
+<button class="book-btn"
+onclick="bookFlight(
+'${flight.name}',
+'${flight.number}',
+'${total}'
+)">
+
+Book Flight
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+/* BOOK FLIGHT */
+
+function bookFlight(name,number,amount){
+
+alert(
+"Flight Booking Successful!\n\n"+
+"Flight: "+name+"\n"+
+"Flight Number: "+number+"\n"+
+"Total Amount: ₹"+amount
+);
+
+}
+
+</script>
+
+</body>
+</html>

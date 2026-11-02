@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cloud Payroll Processing System</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#eef4f8;
+    color:#222;
+}
+
+/* HEADER */
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+header h1{
+    margin:5px;
+}
+
+header p{
+    margin:5px;
+}
+
+
+/* CONTAINER */
+
+.container{
+    width:95%;
+    max-width:1400px;
+    margin:25px auto;
+}
+
+
+/* CARDS */
+
+.card{
+    background:white;
+    padding:25px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.15);
+}
+
+.card h2{
+    color:#1565c0;
+    margin-top:0;
+}
+
+
+/* DASHBOARD CARDS */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    text-align:center;
+    border-radius:10px;
+    box-shadow:0 3px 8px #ccc;
+}
+
+.stat h3{
+    color:#555;
+}
+
+.stat p{
+    font-size:25px;
+    font-weight:bold;
+    color:#1565c0;
+}
+
+
+/* FORM */
+
+.form{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.form-group label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+input,select{
+    width:100%;
+    padding:11px;
+    border:1px solid #bbb;
+    border-radius:5px;
+}
+
+
+/* BUTTONS */
+
+button{
+    padding:11px 18px;
+    border:none;
+    border-radius:5px;
+    background:#1565c0;
+    color:white;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+.calculate{
+    background:#2e7d32;
+}
+
+.clear{
+    background:#757575;
+}
+
+.delete{
+    background:#d32f2f;
+}
+
+.edit{
+    background:#ef6c00;
+}
+
+.print{
+    background:#388e3c;
+}
+
+.export{
+    background:#6a1b9a;
+}
+
+
+/* PAYSLIP */
+
+.payslip{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.salary-box{
+    background:#e3f2fd;
+    padding:15px;
+    border-radius:7px;
+}
+
+.salary-box h3{
+    color:#1565c0;
+}
+
+
+/* TABLE */
+
+.search{
+    width:100%;
+    margin-bottom:15px;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1400px;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+
+tr:hover{
+    background:#f5f5f5;
+}
+
+
+/* FOOTER */
+
+footer{
+    background:#1565c0;
+    color:white;
+    text-align:center;
+    padding:15px;
+    margin-top:30px;
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .dashboard{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .form{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .form{
+        grid-template-columns:1fr;
+    }
+
+    .payslip{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+<h1>☁️ Cloud Payroll Processing System</h1>
+
+<p>SaaS Based Employee Payroll Management</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- DASHBOARD -->
+
+<div class="dashboard">
+
+<div class="stat">
+
+<h3>Total Employees</h3>
+
+<p id="totalEmployees">0</p>
+
+</div>
+
+
+<div class="stat">
+
+<h3>Total Gross Pay</h3>
+
+<p id="totalGross">₹0</p>
+
+</div>
+
+
+<div class="stat">
+
+<h3>Total Net Pay</h3>
+
+<p id="totalNet">₹0</p>
+
+</div>
+
+
+<div class="stat">
+
+<h3>Average Salary</h3>
+
+<p id="averageSalary">₹0</p>
+
+</div>
+
+</div>
+
+
+
+<!-- EMPLOYEE INFORMATION -->
+
+<div class="card">
+
+<h2>Employee Information</h2>
+
+
+<div class="form">
+
+
+<div class="form-group">
+
+<label>Employee Name</label>
+
+<input
+type="text"
+id="name"
+placeholder="Enter employee name">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Employee ID</label>
+
+<input
+type="text"
+id="employeeId"
+placeholder="EMP001">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Department</label>
+
+<select id="department">
+
+<option value="">Select Department</option>
+
+<option>IT</option>
+<option>HR</option>
+<option>Finance</option>
+<option>Marketing</option>
+<option>Operations</option>
+<option>Administration</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Designation</label>
+
+<input
+type="text"
+id="designation"
+placeholder="Software Engineer">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Joining Date</label>
+
+<input
+type="date"
+id="joiningDate">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Experience in Present Organization</label>
+
+<input
+type="number"
+id="presentExp"
+placeholder="Years"
+min="0"
+step="0.1">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Overall Experience</label>
+
+<input
+type="number"
+id="overallExp"
+placeholder="Years"
+min="0"
+step="0.1">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Basic Pay (₹)</label>
+
+<input
+type="number"
+id="basic"
+placeholder="30000"
+min="0">
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- SALARY INFORMATION -->
+
+<div class="card">
+
+<h2>Salary Information</h2>
+
+
+<div class="form">
+
+
+<div class="form-group">
+
+<label>HRA (₹)</label>
+
+<input
+type="number"
+id="hra"
+placeholder="5000"
+min="0">
+
+</div>
+
+
+<div class="form-group">
+
+<label>DA (₹)</label>
+
+<input
+type="number"
+id="da"
+placeholder="3000"
+min="0">
+
+</div>
+
+
+<div class="form-group">
+
+<label>TA (₹)</label>
+
+<input
+type="number"
+id="ta"
+placeholder="2000"
+min="0">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Other Allowance (₹)</label>
+
+<input
+type="number"
+id="other"
+placeholder="1000"
+min="0">
+
+</div>
+
+
+<div class="form-group">
+
+<label>PF Deduction (₹)</label>
+
+<input
+type="number"
+id="pf"
+placeholder="2000"
+min="0">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Professional Tax (₹)</label>
+
+<input
+type="number"
+id="tax"
+placeholder="200"
+min="0">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Other Deduction (₹)</label>
+
+<input
+type="number"
+id="otherDeduction"
+placeholder="0"
+min="0">
+
+</div>
+
+
+<div class="form-group">
+
+<label>Payment Status</label>
+
+<select id="paymentStatus">
+
+<option>Paid</option>
+
+<option>Pending</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<br>
+
+
+<button
+class="calculate"
+onclick="calculateSalary()">
+
+Calculate Payroll
+
+</button>
+
+
+<button
+class="clear"
+onclick="clearForm()">
+
+Clear
+
+</button>
+
+</div>
+
+
+
+<!-- SALARY RESULT -->
+
+<div class="card">
+
+<h2>Payroll Summary</h2>
+
+
+<div class="payslip">
+
+
+<div class="salary-box">
+
+<h3>Basic Pay</h3>
+
+<p id="resultBasic">₹0</p>
+
+</div>
+
+
+<div class="salary-box">
+
+<h3>Total Allowances</h3>
+
+<p id="resultAllowance">₹0</p>
+
+</div>
+
+
+<div class="salary-box">
+
+<h3>Gross Pay</h3>
+
+<p id="resultGross">₹0</p>
+
+</div>
+
+
+<div class="salary-box">
+
+<h3>Total Deduction</h3>
+
+<p id="resultDeduction">₹0</p>
+
+</div>
+
+
+<div class="salary-box">
+
+<h3>Net Pay</h3>
+
+<p id="resultNet">₹0</p>
+
+</div>
+
+
+<div class="salary-box">
+
+<h3>Salary Grade</h3>
+
+<p id="resultGrade">-</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- EMPLOYEE RECORDS -->
+
+<div class="card">
+
+<h2>Employee Payroll Records</h2>
+
+
+<input
+class="search"
+type="text"
+id="search"
+placeholder="Search employee by name, ID or department"
+onkeyup="searchEmployee()">
+
+
+<button
+class="print"
+onclick="window.print()">
+
+Print Payroll
+
+</button>
+
+
+<button
+class="export"
+onclick="exportCSV()">
+
+Export CSV
+
+</button>
+
+
+<div class="table-container">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+
+<th>Employee ID</th>
+
+<th>Department</th>
+
+<th>Designation</th>
+
+<th>Present Exp.</th>
+
+<th>Overall Exp.</th>
+
+<th>Basic Pay</th>
+
+<th>Gross Pay</th>
+
+<th>Deduction</th>
+
+<th>Net Pay</th>
+
+<th>Grade</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<footer>
+
+Cloud Computing Lab |
+SaaS Payroll Processing System
+
+</footer>
+
+
+
+<script>
+
+
+/* EMPLOYEE ARRAY */
+
+let employees = [];
+
+let editIndex = -1;
+
+
+/* CALCULATE PAYROLL */
+
+function calculateSalary(){
+
+
+let name =
+document.getElementById("name").value;
+
+
+let employeeId =
+document.getElementById("employeeId").value;
+
+
+let department =
+document.getElementById("department").value;
+
+
+let designation =
+document.getElementById("designation").value;
+
+
+let joiningDate =
+document.getElementById("joiningDate").value;
+
+
+let presentExp =
+Number(document.getElementById("presentExp").value);
+
+
+let overallExp =
+Number(document.getElementById("overallExp").value);
+
+
+let basic =
+Number(document.getElementById("basic").value);
+
+
+let hra =
+Number(document.getElementById("hra").value);
+
+
+let da =
+Number(document.getElementById("da").value);
+
+
+let ta =
+Number(document.getElementById("ta").value);
+
+
+let other =
+Number(document.getElementById("other").value);
+
+
+let pf =
+Number(document.getElementById("pf").value);
+
+
+let tax =
+Number(document.getElementById("tax").value);
+
+
+let otherDeduction =
+Number(
+document.getElementById("otherDeduction").value
+);
+
+
+let paymentStatus =
+document.getElementById("paymentStatus").value;
+
+
+
+/* VALIDATION */
+
+if(
+name === "" ||
+employeeId === "" ||
+department === "" ||
+designation === ""
+){
+
+alert("Please enter all employee details");
+
+return;
+
+}
+
+
+/* ALLOWANCES */
+
+let totalAllowance =
+
+hra +
+da +
+ta +
+other;
+
+
+/* GROSS PAY */
+
+let grossPay =
+
+basic +
+totalAllowance;
+
+
+/* DEDUCTIONS */
+
+let totalDeduction =
+
+pf +
+tax +
+otherDeduction;
+
+
+/* NET PAY */
+
+let netPay =
+
+grossPay -
+totalDeduction;
+
+
+/* SALARY GRADE */
+
+let grade;
+
+
+if(basic >= 100000){
+
+grade = "A+";
+
+}
+
+else if(basic >= 75000){
+
+grade = "A";
+
+}
+
+else if(basic >= 50000){
+
+grade = "B+";
+
+}
+
+else if(basic >= 30000){
+
+grade = "B";
+
+}
+
+else if(basic >= 20000){
+
+grade = "C";
+
+}
+
+else{
+
+grade = "D";
+
+}
+
+
+
+/* DISPLAY RESULT */
+
+document.getElementById("resultBasic")
+.innerText = formatMoney(basic);
+
+
+document.getElementById("resultAllowance")
+.innerText = formatMoney(totalAllowance);
+
+
+document.getElementById("resultGross")
+.innerText = formatMoney(grossPay);
+
+
+document.getElementById("resultDeduction")
+.innerText = formatMoney(totalDeduction);
+
+
+document.getElementById("resultNet")
+.innerText = formatMoney(netPay);
+
+
+document.getElementById("resultGrade")
+.innerText = grade;
+
+
+
+/* EMPLOYEE OBJECT */
+
+let employee = {
+
+name:name,
+
+employeeId:employeeId,
+
+department:department,
+
+designation:designation,
+
+joiningDate:joiningDate,
+
+presentExp:presentExp,
+
+overallExp:overallExp,
+
+basic:basic,
+
+allowance:totalAllowance,
+
+gross:grossPay,
+
+deduction:totalDeduction,
+
+net:netPay,
+
+grade:grade,
+
+status:paymentStatus
+
+};
+
+
+
+/* ADD OR EDIT */
+
+if(editIndex === -1){
+
+employees.push(employee);
+
+}
+
+else{
+
+employees[editIndex] = employee;
+
+editIndex = -1;
+
+}
+
+
+displayEmployees();
+
+updateDashboard();
+
+alert("Payroll processed successfully!");
+
+}
+
+
+
+/* FORMAT MONEY */
+
+function formatMoney(value){
+
+return "₹" +
+value.toLocaleString("en-IN");
+
+}
+
+
+
+/* DISPLAY EMPLOYEES */
+
+function displayEmployees(){
+
+
+let table =
+document.getElementById("tableBody");
+
+
+table.innerHTML = "";
+
+
+employees.forEach(
+
+function(employee,index){
+
+
+let row =
+table.insertRow();
+
+
+row.innerHTML = `
+
+<td>${employee.name}</td>
+
+<td>${employee.employeeId}</td>
+
+<td>${employee.department}</td>
+
+<td>${employee.designation}</td>
+
+<td>${employee.presentExp} Years</td>
+
+<td>${employee.overallExp} Years</td>
+
+<td>${formatMoney(employee.basic)}</td>
+
+<td>${formatMoney(employee.gross)}</td>
+
+<td>${formatMoney(employee.deduction)}</td>
+
+<td>${formatMoney(employee.net)}</td>
+
+<td><strong>${employee.grade}</strong></td>
+
+<td>${employee.status}</td>
+
+<td>
+
+<button
+class="edit"
+onclick="editEmployee(${index})">
+
+Edit
+
+</button>
+
+<button
+class="delete"
+onclick="deleteEmployee(${index})">
+
+Delete
+
+</button>
+
+</td>
+
+`;
+
+}
+
+);
+
+}
+
+
+
+/* DELETE */
+
+function deleteEmployee(index){
+
+
+if(
+confirm("Do you want to delete this employee?")
+){
+
+employees.splice(index,1);
+
+displayEmployees();
+
+updateDashboard();
+
+}
+
+}
+
+
+
+/* EDIT */
+
+function editEmployee(index){
+
+
+let employee =
+employees[index];
+
+
+document.getElementById("name").value =
+employee.name;
+
+
+document.getElementById("employeeId").value =
+employee.employeeId;
+
+
+document.getElementById("department").value =
+employee.department;
+
+
+document.getElementById("designation").value =
+employee.designation;
+
+
+document.getElementById("joiningDate").value =
+employee.joiningDate;
+
+
+document.getElementById("presentExp").value =
+employee.presentExp;
+
+
+document.getElementById("overallExp").value =
+employee.overallExp;
+
+
+document.getElementById("basic").value =
+employee.basic;
+
+
+/* APPROXIMATE ALLOWANCES */
+
+document.getElementById("hra").value = 0;
+
+document.getElementById("da").value = 0;
+
+document.getElementById("ta").value = 0;
+
+document.getElementById("other").value = 0;
+
+
+document.getElementById("pf").value = 0;
+
+document.getElementById("tax").value = 0;
+
+document.getElementById("otherDeduction").value = 0;
+
+
+document.getElementById("paymentStatus").value =
+employee.status;
+
+
+editIndex = index;
+
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+}
+
+
+
+/* SEARCH */
+
+function searchEmployee(){
+
+
+let search =
+
+document.getElementById("search")
+.value
+.toLowerCase();
+
+
+let rows =
+
+document
+.getElementById("tableBody")
+.getElementsByTagName("tr");
+
+
+for(let row of rows){
+
+
+let text =
+row.innerText.toLowerCase();
+
+
+if(text.includes(search)){
+
+row.style.display = "";
+
+}
+
+else{
+
+row.style.display = "none";
+
+}
+
+}
+
+}
+
+
+
+/* DASHBOARD */
+
+function updateDashboard(){
+
+
+let totalEmployees =
+employees.length;
+
+
+let totalGross = 0;
+
+let totalNet = 0;
+
+
+employees.forEach(
+
+function(employee){
+
+totalGross += employee.gross;
+
+totalNet += employee.net;
+
+}
+
+);
+
+
+let averageSalary =
+
+totalEmployees > 0
+?
+totalNet / totalEmployees
+:
+0;
+
+
+document.getElementById("totalEmployees")
+.innerText =
+totalEmployees;
+
+
+document.getElementById("totalGross")
+.innerText =
+formatMoney(totalGross);
+
+
+document.getElementById("totalNet")
+.innerText =
+formatMoney(totalNet);
+
+
+document.getElementById("averageSalary")
+.innerText =
+formatMoney(
+Math.round(averageSalary)
+);
+
+}
+
+
+
+/* CLEAR FORM */
+
+function clearForm(){
+
+
+document
+.querySelectorAll("input")
+.forEach(
+
+function(input){
+
+input.value = "";
+
+}
+
+);
+
+
+document.getElementById("department")
+.value = "";
+
+
+document.getElementById("paymentStatus")
+.value = "Paid";
+
+
+document.getElementById("resultBasic")
+.innerText = "₹0";
+
+
+document.getElementById("resultAllowance")
+.innerText = "₹0";
+
+
+document.getElementById("resultGross")
+.innerText = "₹0";
+
+
+document.getElementById("resultDeduction")
+.innerText = "₹0";
+
+
+document.getElementById("resultNet")
+.innerText = "₹0";
+
+
+document.getElementById("resultGrade")
+.innerText = "-";
+
+
+editIndex = -1;
+
+}
+
+
+
+/* EXPORT CSV */
+
+function exportCSV(){
+
+
+if(employees.length === 0){
+
+alert("No employee records available");
+
+return;
+
+}
+
+
+let csv =
+
+"Name,Employee ID,Department,Designation," +
+
+"Present Experience,Overall Experience," +
+
+"Basic Pay,Allowance,Gross Pay,Deduction," +
+
+"Net Pay,Grade,Status\n";
+
+
+employees.forEach(
+
+function(employee){
+
+
+csv +=
+
+`"${employee.name}",` +
+
+`"${employee.employeeId}",` +
+
+`"${employee.department}",` +
+
+`"${employee.designation}",` +
+
+`"${employee.presentExp}",` +
+
+`"${employee.overallExp}",` +
+
+`"${employee.basic}",` +
+
+`"${employee.allowance}",` +
+
+`"${employee.gross}",` +
+
+`"${employee.deduction}",` +
+
+`"${employee.net}",` +
+
+`"${employee.grade}",` +
+
+`"${employee.status}"\n`;
+
+}
+
+);
+
+
+let blob =
+
+new Blob(
+
+[csv],
+
+{type:"text/csv"}
+
+);
+
+
+let url =
+URL.createObjectURL(blob);
+
+
+let link =
+document.createElement("a");
+
+
+link.href = url;
+
+
+link.download =
+"Payroll_Records.csv";
+
+
+link.click();
+
+
+URL.revokeObjectURL(url);
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Students Attendance System</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef4f8;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    width:90%;
+    margin:20px auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px #bbb;
+}
+
+h2{
+    color:#1565c0;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    box-sizing:border-box;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+button{
+    padding:10px 18px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
+    background:#1565c0;
+    margin:5px;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    text-align:center;
+    border-radius:10px;
+    box-shadow:0 2px 6px #ccc;
+}
+
+.stat h3{
+    color:#1565c0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+}
+
+.search{
+    width:300px;
+    margin-bottom:10px;
+}
+
+.grade{
+    font-weight:bold;
+}
+
+@media(max-width:800px){
+    .form-grid,
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>☁ Cloud Students Attendance System</h1>
+    <p>SaaS Based Attendance Management</p>
+</header>
+
+<div class="container">
+
+<!-- Dashboard -->
+<div class="dashboard">
+
+<div class="stat">
+<h3>Total Students</h3>
+<p id="totalStudents">0</p>
+</div>
+
+<div class="stat">
+<h3>Present</h3>
+<p id="totalPresent">0</p>
+</div>
+
+<div class="stat">
+<h3>Absent</h3>
+<p id="totalAbsent">0</p>
+</div>
+
+<div class="stat">
+<h3>Average Attendance</h3>
+<p id="averageAttendance">0%</p>
+</div>
+
+</div>
+
+<!-- Student Details -->
+<div class="card">
+
+<h2>Student Attendance Details</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Student Name</label>
+<input type="text" id="name" placeholder="Enter student name">
+</div>
+
+<div>
+<label>Register Number</label>
+<input type="text" id="regno" placeholder="Enter register number">
+</div>
+
+<div>
+<label>Course</label>
+<select id="course">
+<option value="">Select Course</option>
+<option>B.Tech CSE</option>
+<option>B.Tech IT</option>
+<option>B.Tech AI & DS</option>
+<option>B.Tech ECE</option>
+<option>B.Tech EEE</option>
+<option>B.Tech Mechanical</option>
+</select>
+</div>
+
+<div>
+<label>Total Working Days</label>
+<input type="number" id="workingDays" value="100">
+</div>
+
+<div>
+<label>Present Days</label>
+<input type="number" id="present" placeholder="Present days">
+</div>
+
+<div>
+<label>Absent Days</label>
+<input type="number" id="absent" placeholder="Absent days">
+</div>
+
+<div>
+<label>OD Request</label>
+<select id="od">
+<option>No</option>
+<option>Yes</option>
+</select>
+</div>
+
+<div>
+<label>OD Days</label>
+<input type="number" id="odDays" value="0">
+</div>
+
+<div>
+<label>Course</label>
+<input type="text" id="subject" placeholder="Example: Cloud Computing">
+</div>
+
+</div>
+
+<br>
+
+<button onclick="calculateAttendance()">Calculate Attendance</button>
+<button onclick="addStudent()">Add Student</button>
+<button onclick="clearForm()">Clear</button>
+
+</div>
+
+<!-- Attendance Result -->
+<div class="card">
+
+<h2>Attendance Result</h2>
+
+<table>
+
+<tr>
+<th>Attendance Percentage</th>
+<th>Grade</th>
+<th>Performance</th>
+</tr>
+
+<tr>
+<td id="percentage">0%</td>
+<td id="grade">-</td>
+<td id="performance">-</td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- Student Records -->
+<div class="card">
+
+<h2>Student Attendance Records</h2>
+
+<input class="search"
+       type="text"
+       id="search"
+       placeholder="Search student..."
+       onkeyup="displayStudents()">
+
+<button onclick="window.print()">Print</button>
+<button onclick="exportCSV()">Export CSV</button>
+
+<table id="studentTable">
+
+<thead>
+<tr>
+<th>S.No</th>
+<th>Name</th>
+<th>Register No</th>
+<th>Course</th>
+<th>Subject</th>
+<th>Present</th>
+<th>Absent</th>
+<th>OD</th>
+<th>OD Days</th>
+<th>Attendance %</th>
+<th>Grade</th>
+<th>Performance</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+<!-- Grading -->
+<div class="card">
+
+<h2>Attendance Grading System</h2>
+
+<table>
+
+<tr>
+<th>Attendance %</th>
+<th>Grade</th>
+<th>Performance</th>
+</tr>
+
+<tr>
+<td>90 - 100%</td>
+<td>A+</td>
+<td>Excellent</td>
+</tr>
+
+<tr>
+<td>80 - 89%</td>
+<td>A</td>
+<td>Very Good</td>
+</tr>
+
+<tr>
+<td>70 - 79%</td>
+<td>B+</td>
+<td>Good</td>
+</tr>
+
+<tr>
+<td>60 - 69%</td>
+<td>B</td>
+<td>Average</td>
+</tr>
+
+<tr>
+<td>50 - 59%</td>
+<td>C</td>
+<td>Below Average</td>
+</tr>
+
+<tr>
+<td>Below 50%</td>
+<td>F</td>
+<td>Low Attendance</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+let students = [];
+let editIndex = -1;
+
+/* Calculate Attendance */
+
+function calculateAttendance(){
+
+    let workingDays =
+        Number(document.getElementById("workingDays").value);
+
+    let present =
+        Number(document.getElementById("present").value);
+
+    let odDays =
+        Number(document.getElementById("odDays").value);
+
+    if(workingDays <= 0){
+        alert("Enter valid working days");
+        return;
+    }
+
+    let percentage =
+        ((present + odDays) / workingDays) * 100;
+
+    if(percentage > 100)
+        percentage = 100;
+
+    let result = getGrade(percentage);
+
+    document.getElementById("percentage").innerText =
+        percentage.toFixed(2) + "%";
+
+    document.getElementById("grade").innerText =
+        result.grade;
+
+    document.getElementById("performance").innerText =
+        result.performance;
+
+    return {
+        percentage: percentage,
+        grade: result.grade,
+        performance: result.performance
+    };
+}
+
+
+/* Grade */
+
+function getGrade(percentage){
+
+    if(percentage >= 90)
+        return {grade:"A+", performance:"Excellent"};
+
+    else if(percentage >= 80)
+        return {grade:"A", performance:"Very Good"};
+
+    else if(percentage >= 70)
+        return {grade:"B+", performance:"Good"};
+
+    else if(percentage >= 60)
+        return {grade:"B", performance:"Average"};
+
+    else if(percentage >= 50)
+        return {grade:"C", performance:"Below Average"};
+
+    else
+        return {grade:"F", performance:"Low Attendance"};
+}
+
+
+/* Add Student */
+
+function addStudent(){
+
+    let name =
+        document.getElementById("name").value;
+
+    let regno =
+        document.getElementById("regno").value;
+
+    let course =
+        document.getElementById("course").value;
+
+    let subject =
+        document.getElementById("subject").value;
+
+    let workingDays =
+        Number(document.getElementById("workingDays").value);
+
+    let present =
+        Number(document.getElementById("present").value);
+
+    let absent =
+        Number(document.getElementById("absent").value);
+
+    let od =
+        document.getElementById("od").value;
+
+    let odDays =
+        Number(document.getElementById("odDays").value);
+
+    if(name === "" || regno === "" || course === ""){
+        alert("Please enter student details");
+        return;
+    }
+
+    let result = calculateAttendance();
+
+    if(!result)
+        return;
+
+    let student = {
+
+        name:name,
+        regno:regno,
+        course:course,
+        subject:subject,
+        workingDays:workingDays,
+        present:present,
+        absent:absent,
+        od:od,
+        odDays:odDays,
+        percentage:result.percentage,
+        grade:result.grade,
+        performance:result.performance
+    };
+
+    if(editIndex === -1){
+
+        students.push(student);
+
+    }else{
+
+        students[editIndex] = student;
+        editIndex = -1;
+    }
+
+    displayStudents();
+    updateDashboard();
+    clearForm();
+
+}
+
+
+/* Display Students */
+
+function displayStudents(){
+
+    let tbody =
+        document.querySelector("#studentTable tbody");
+
+    tbody.innerHTML = "";
+
+    let search =
+        document.getElementById("search").value.toLowerCase();
+
+    students.forEach((s,index)=>{
+
+        if(
+            s.name.toLowerCase().includes(search) ||
+            s.regno.toLowerCase().includes(search)
+        ){
+
+            let row = tbody.insertRow();
+
+            row.innerHTML = `
+
+            <td>${index+1}</td>
+
+            <td>${s.name}</td>
+
+            <td>${s.regno}</td>
+
+            <td>${s.course}</td>
+
+            <td>${s.subject}</td>
+
+            <td>${s.present}</td>
+
+            <td>${s.absent}</td>
+
+            <td>${s.od}</td>
+
+            <td>${s.odDays}</td>
+
+            <td>${s.percentage.toFixed(2)}%</td>
+
+            <td class="grade">${s.grade}</td>
+
+            <td>${s.performance}</td>
+
+            <td>
+
+            <button onclick="editStudent(${index})">
+            Edit
+            </button>
+
+            <button onclick="deleteStudent(${index})">
+            Delete
+            </button>
+
+            </td>
+
+            `;
+        }
+
+    });
+
+}
+
+
+/* Edit */
+
+function editStudent(index){
+
+    let s = students[index];
+
+    document.getElementById("name").value = s.name;
+    document.getElementById("regno").value = s.regno;
+    document.getElementById("course").value = s.course;
+    document.getElementById("subject").value = s.subject;
+    document.getElementById("workingDays").value = s.workingDays;
+    document.getElementById("present").value = s.present;
+    document.getElementById("absent").value = s.absent;
+    document.getElementById("od").value = s.od;
+    document.getElementById("odDays").value = s.odDays;
+
+    editIndex = index;
+
+    calculateAttendance();
+
+}
+
+
+/* Delete */
+
+function deleteStudent(index){
+
+    if(confirm("Delete this student?")){
+
+        students.splice(index,1);
+
+        displayStudents();
+        updateDashboard();
+    }
+
+}
+
+
+/* Dashboard */
+
+function updateDashboard(){
+
+    document.getElementById("totalStudents").innerText =
+        students.length;
+
+    let present = 0;
+    let absent = 0;
+    let attendance = 0;
+
+    students.forEach(s=>{
+
+        present += s.present;
+        absent += s.absent;
+        attendance += s.percentage;
+
+    });
+
+    document.getElementById("totalPresent").innerText =
+        present;
+
+    document.getElementById("totalAbsent").innerText =
+        absent;
+
+    let avg = students.length ?
+        attendance / students.length : 0;
+
+    document.getElementById("averageAttendance").innerText =
+        avg.toFixed(2) + "%";
+}
+
+
+/* Clear */
+
+function clearForm(){
+
+    document.getElementById("name").value="";
+    document.getElementById("regno").value="";
+    document.getElementById("course").value="";
+    document.getElementById("subject").value="";
+    document.getElementById("workingDays").value=100;
+    document.getElementById("present").value="";
+    document.getElementById("absent").value="";
+    document.getElementById("od").value="No";
+    document.getElementById("odDays").value=0;
+
+    document.getElementById("percentage").innerText="0%";
+    document.getElementById("grade").innerText="-";
+    document.getElementById("performance").innerText="-";
+
+    editIndex=-1;
+}
+
+
+/* Export CSV */
+
+function exportCSV(){
+
+    if(students.length === 0){
+        alert("No student records available");
+        return;
+    }
+
+    let csv =
+    "Name,Register No,Course,Subject,Present,Absent,OD,OD Days,Attendance %,Grade,Performance\n";
+
+    students.forEach(s=>{
+
+        csv +=
+        `${s.name},${s.regno},${s.course},${s.subject},${s.present},${s.absent},${s.od},${s.odDays},${s.percentage.toFixed(2)},${s.grade},${s.performance}\n`;
+
+    });
+
+    let blob =
+        new Blob([csv],{type:"text/csv"});
+
+    let url =
+        URL.createObjectURL(blob);
+
+    let a =
+        document.createElement("a");
+
+    a.href=url;
+    a.download="student_attendance.csv";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+</script>
+
+</body>
+</html>

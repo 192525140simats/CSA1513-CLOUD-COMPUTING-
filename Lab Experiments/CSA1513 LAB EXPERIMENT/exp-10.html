@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cloud Student Information System</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    margin:0;
+    background:#eef4f8;
+    color:#222;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    width:90%;
+    max-width:1100px;
+    margin:25px auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 3px 10px #bbb;
+}
+
+h2{
+    color:#1565c0;
+    border-bottom:2px solid #1565c0;
+    padding-bottom:8px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+input, select, textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #aaa;
+    border-radius:5px;
+}
+
+textarea{
+    resize:none;
+}
+
+button{
+    background:#1565c0;
+    color:white;
+    border:none;
+    padding:11px 18px;
+    border-radius:5px;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+}
+
+.result{
+    background:#e3f2fd;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.search{
+    margin-bottom:15px;
+}
+
+@media(max-width:700px){
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media print{
+    button,.search{
+        display:none;
+    }
+
+    body{
+        background:white;
+    }
+
+    .card{
+        box-shadow:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Cloud Student Information System</h1>
+    <p>SaaS-Based Student Management Application</p>
+</header>
+
+<div class="container">
+
+<!-- STUDENT INFORMATION -->
+
+<div class="card">
+<h2>Student Information</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Student Name</label>
+<input type="text" id="name" placeholder="Enter student name">
+</div>
+
+<div>
+<label>Register Number</label>
+<input type="text" id="regno" placeholder="Enter register number">
+</div>
+
+<div>
+<label>Address</label>
+<textarea id="address" placeholder="Enter address"></textarea>
+</div>
+
+<div>
+<label>Phone Number</label>
+<input type="tel" id="phone" placeholder="Enter phone number">
+</div>
+
+<div>
+<label>Age</label>
+<input type="number" id="age" placeholder="Enter age">
+</div>
+
+<div>
+<label>Course</label>
+<select id="course">
+<option value="">Select Course</option>
+<option>B.Tech Computer Science</option>
+<option>B.Tech AI & ML</option>
+<option>B.Tech Information Technology</option>
+<option>B.Tech ECE</option>
+<option>B.Tech Mechanical</option>
+</select>
+</div>
+
+<div>
+<label>Semester</label>
+<select id="semester">
+<option>Semester 1</option>
+<option>Semester 2</option>
+<option>Semester 3</option>
+<option>Semester 4</option>
+<option>Semester 5</option>
+<option>Semester 6</option>
+<option>Semester 7</option>
+<option>Semester 8</option>
+</select>
+</div>
+
+<div>
+<label>Email</label>
+<input type="email" id="email" placeholder="Enter email">
+</div>
+
+</div>
+</div>
+
+
+<!-- MARKS -->
+
+<div class="card">
+
+<h2>Semester Mark Sheet</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Mathematics</label>
+<input type="number" id="math" min="0" max="100">
+</div>
+
+<div>
+<label>Programming</label>
+<input type="number" id="programming" min="0" max="100">
+</div>
+
+<div>
+<label>Computer Science</label>
+<input type="number" id="cs" min="0" max="100">
+</div>
+
+<div>
+<label>Communication Skills</label>
+<input type="number" id="communication" min="0" max="100">
+</div>
+
+<div>
+<label>Engineering Subject</label>
+<input type="number" id="engineering" min="0" max="100">
+</div>
+
+<div>
+<label>Attendance (%)</label>
+<input type="number" id="attendance" min="0" max="100">
+</div>
+
+</div>
+
+<button onclick="calculate()">Calculate Result</button>
+
+<div class="result" id="result">
+Result will appear here.
+</div>
+
+</div>
+
+
+<!-- SEARCH -->
+
+<div class="card">
+
+<h2>Student Search</h2>
+
+<div class="search">
+<input type="text" id="searchBox"
+placeholder="Search by student name or register number"
+onkeyup="searchStudent()">
+</div>
+
+<table id="studentTable">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Register No</th>
+<th>Course</th>
+<th>Semester</th>
+<th>Percentage</th>
+<th>Attendance</th>
+</tr>
+</thead>
+
+<tbody id="studentData">
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- PROGRESS REPORT -->
+
+<div class="card">
+
+<h2>Progress Report</h2>
+
+<table>
+
+<tr>
+<th>Category</th>
+<th>Details</th>
+</tr>
+
+<tr>
+<td>Academic Performance</td>
+<td id="academic">Not calculated</td>
+</tr>
+
+<tr>
+<td>Attendance</td>
+<td id="attendReport">Not calculated</td>
+</tr>
+
+<tr>
+<td>Overall Performance</td>
+<td id="performance">Not calculated</td>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- ACTIONS -->
+
+<div class="card">
+
+<h2>Student Report</h2>
+
+<button onclick="saveStudent()">Save Student</button>
+
+<button onclick="clearForm()">Clear Form</button>
+
+<button onclick="window.print()">Print Report</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+let students = [];
+
+
+/* CALCULATE MARKS */
+
+function calculate(){
+
+    let math = Number(document.getElementById("math").value);
+    let programming = Number(document.getElementById("programming").value);
+    let cs = Number(document.getElementById("cs").value);
+    let communication = Number(document.getElementById("communication").value);
+    let engineering = Number(document.getElementById("engineering").value);
+    let attendance = Number(document.getElementById("attendance").value);
+
+    let total =
+        math +
+        programming +
+        cs +
+        communication +
+        engineering;
+
+    let percentage = total / 5;
+
+    let grade;
+
+    if(percentage >= 90)
+        grade = "A+";
+    else if(percentage >= 80)
+        grade = "A";
+    else if(percentage >= 70)
+        grade = "B";
+    else if(percentage >= 60)
+        grade = "C";
+    else if(percentage >= 50)
+        grade = "D";
+    else
+        grade = "F";
+
+    let performance;
+
+    if(percentage >= 80 && attendance >= 75)
+        performance = "Excellent";
+    else if(percentage >= 60 && attendance >= 75)
+        performance = "Good";
+    else
+        performance = "Needs Improvement";
+
+    document.getElementById("result").innerHTML =
+
+        "<b>Total Marks:</b> " + total + " / 500<br>" +
+        "<b>Percentage:</b> " + percentage.toFixed(2) + "%<br>" +
+        "<b>Grade:</b> " + grade + "<br>" +
+        "<b>Attendance:</b> " + attendance + "%<br>" +
+        "<b>Overall Performance:</b> " + performance;
+
+    document.getElementById("academic").innerHTML =
+        percentage.toFixed(2) + "% - Grade " + grade;
+
+    document.getElementById("attendReport").innerHTML =
+        attendance + "%";
+
+    document.getElementById("performance").innerHTML =
+        performance;
+}
+
+
+/* SAVE STUDENT */
+
+function saveStudent(){
+
+    let name = document.getElementById("name").value;
+    let regno = document.getElementById("regno").value;
+    let course = document.getElementById("course").value;
+    let semester = document.getElementById("semester").value;
+    let attendance = document.getElementById("attendance").value;
+
+    let math = Number(document.getElementById("math").value);
+    let programming = Number(document.getElementById("programming").value);
+    let cs = Number(document.getElementById("cs").value);
+    let communication = Number(document.getElementById("communication").value);
+    let engineering = Number(document.getElementById("engineering").value);
+
+    let percentage =
+        (math + programming + cs + communication + engineering) / 5;
+
+    if(name === "" || regno === ""){
+        alert("Please enter student name and register number.");
+        return;
+    }
+
+    students.push({
+        name:name,
+        regno:regno,
+        course:course,
+        semester:semester,
+        percentage:percentage.toFixed(2),
+        attendance:attendance
+    });
+
+    displayStudents();
+
+    alert("Student record saved successfully!");
+
+}
+
+
+/* DISPLAY STUDENTS */
+
+function displayStudents(){
+
+    let table = document.getElementById("studentData");
+
+    table.innerHTML = "";
+
+    students.forEach(function(student){
+
+        let row = table.insertRow();
+
+        row.insertCell(0).innerHTML = student.name;
+        row.insertCell(1).innerHTML = student.regno;
+        row.insertCell(2).innerHTML = student.course;
+        row.insertCell(3).innerHTML = student.semester;
+        row.insertCell(4).innerHTML = student.percentage + "%";
+        row.insertCell(5).innerHTML = student.attendance + "%";
+
+    });
+}
+
+
+/* SEARCH STUDENT */
+
+function searchStudent(){
+
+    let search =
+        document.getElementById("searchBox").value.toLowerCase();
+
+    let rows =
+        document.getElementById("studentData").getElementsByTagName("tr");
+
+    for(let i = 0; i < rows.length; i++){
+
+        let text = rows[i].innerText.toLowerCase();
+
+        rows[i].style.display =
+            text.includes(search) ? "" : "none";
+    }
+}
+
+
+/* CLEAR FORM */
+
+function clearForm(){
+
+    document.querySelectorAll("input, textarea").forEach(function(element){
+        element.value = "";
+    });
+
+    document.getElementById("course").value = "";
+    document.getElementById("semester").value = "";
+
+    document.getElementById("result").innerHTML =
+        "Result will appear here.";
+
+    document.getElementById("academic").innerHTML =
+        "Not calculated";
+
+    document.getElementById("attendReport").innerHTML =
+        "Not calculated";
+
+    document.getElementById("performance").innerHTML =
+        "Not calculated";
+}
+
+</script>
+
+</body>
+</html>

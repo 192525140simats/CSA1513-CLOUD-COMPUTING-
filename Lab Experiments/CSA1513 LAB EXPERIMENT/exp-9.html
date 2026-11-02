@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIMATS Hospital Information System</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef4f8;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    width:90%;
+    margin:20px auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px #bbb;
+}
+
+h2{
+    color:#1565c0;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    box-sizing:border-box;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+textarea{
+    height:80px;
+}
+
+button{
+    padding:10px 18px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
+    background:#1565c0;
+    margin:5px;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    text-align:center;
+    border-radius:10px;
+    box-shadow:0 2px 6px #ccc;
+}
+
+.stat h3{
+    color:#1565c0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+}
+
+.search{
+    width:300px;
+    margin-bottom:10px;
+}
+
+@media(max-width:800px){
+    .form-grid,.dashboard{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>☁ SIMATS Hospital Information System</h1>
+    <p>Cloud-Based SaaS Hospital Management</p>
+</header>
+
+<div class="container">
+
+<!-- Dashboard -->
+
+<div class="dashboard">
+
+<div class="stat">
+<h3>Total Patients</h3>
+<p id="totalPatients">0</p>
+</div>
+
+<div class="stat">
+<h3>Admitted</h3>
+<p id="admittedPatients">0</p>
+</div>
+
+<div class="stat">
+<h3>Discharged</h3>
+<p id="dischargedPatients">0</p>
+</div>
+
+<div class="stat">
+<h3>Total Bill</h3>
+<p id="totalBill">₹0</p>
+</div>
+
+</div>
+
+
+<!-- Patient Details -->
+
+<div class="card">
+
+<h2>Patient Registration</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Patient Name</label>
+<input type="text" id="name"
+placeholder="Enter patient name">
+</div>
+
+<div>
+<label>Age</label>
+<input type="number" id="age"
+placeholder="Enter age">
+</div>
+
+<div>
+<label>Gender</label>
+<select id="gender">
+<option value="">Select Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+</div>
+
+<div>
+<label>Phone</label>
+<input type="text" id="phone"
+placeholder="Enter phone number">
+</div>
+
+<div>
+<label>Email</label>
+<input type="email" id="email"
+placeholder="Enter email">
+</div>
+
+<div>
+<label>Address</label>
+<input type="text" id="address"
+placeholder="Enter address">
+</div>
+
+<div>
+<label>Attender Name</label>
+<input type="text" id="attender"
+placeholder="Enter attender name">
+</div>
+
+<div>
+<label>Attender Phone</label>
+<input type="text" id="attenderPhone"
+placeholder="Enter attender phone">
+</div>
+
+<div>
+<label>Doctor Name</label>
+<input type="text" id="doctor"
+placeholder="Enter doctor name">
+</div>
+
+<div>
+<label>Disease</label>
+<input type="text" id="disease"
+placeholder="Enter disease">
+</div>
+
+<div>
+<label>Department</label>
+<select id="department">
+<option>Select Department</option>
+<option>General Medicine</option>
+<option>Cardiology</option>
+<option>Neurology</option>
+<option>Orthopedics</option>
+<option>Pediatrics</option>
+<option>Dermatology</option>
+<option>ENT</option>
+<option>Dental</option>
+</select>
+</div>
+
+<div>
+<label>Room Number</label>
+<input type="text" id="room"
+placeholder="Enter room number">
+</div>
+
+<div>
+<label>Admission Date</label>
+<input type="date" id="admission">
+</div>
+
+<div>
+<label>Patient Status</label>
+<select id="status">
+<option>Admitted</option>
+<option>Discharged</option>
+<option>Under Treatment</option>
+<option>Emergency</option>
+</select>
+</div>
+
+<div>
+<label>Hospital Bill</label>
+<input type="number" id="bill"
+placeholder="Enter bill amount">
+</div>
+
+<div>
+<label>Medical Remarks</label>
+<textarea id="remarks"
+placeholder="Enter remarks"></textarea>
+</div>
+
+</div>
+
+<br>
+
+<button onclick="addPatient()">Add Patient</button>
+<button onclick="clearForm()">Clear</button>
+
+</div>
+
+
+<!-- Patient Records -->
+
+<div class="card">
+
+<h2>Patient Records</h2>
+
+<input class="search"
+type="text"
+id="search"
+placeholder="Search patient or doctor..."
+onkeyup="displayPatients()">
+
+<button onclick="window.print()">Print</button>
+<button onclick="exportCSV()">Export CSV</button>
+
+<table id="patientTable">
+
+<thead>
+
+<tr>
+<th>S.No</th>
+<th>Patient Name</th>
+<th>Age</th>
+<th>Phone</th>
+<th>Attender</th>
+<th>Doctor</th>
+<th>Disease</th>
+<th>Department</th>
+<th>Room</th>
+<th>Status</th>
+<th>Bill</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+
+<!-- Hospital Services -->
+
+<div class="card">
+
+<h2>Hospital Information</h2>
+
+<table>
+
+<tr>
+<th>Service</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>Patient Registration</td>
+<td>Stores patient personal information</td>
+</tr>
+
+<tr>
+<td>Doctor Management</td>
+<td>Stores doctor and department details</td>
+</tr>
+
+<tr>
+<td>Admission Management</td>
+<td>Maintains admission and room information</td>
+</tr>
+
+<tr>
+<td>Billing</td>
+<td>Stores hospital billing information</td>
+</tr>
+
+<tr>
+<td>Patient Status</td>
+<td>Tracks admitted and discharged patients</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+
+<script>
+
+let patients = [];
+let editIndex = -1;
+
+
+/* Add Patient */
+
+function addPatient(){
+
+    let patient = {
+
+        name:document.getElementById("name").value,
+
+        age:document.getElementById("age").value,
+
+        gender:document.getElementById("gender").value,
+
+        phone:document.getElementById("phone").value,
+
+        email:document.getElementById("email").value,
+
+        address:document.getElementById("address").value,
+
+        attender:document.getElementById("attender").value,
+
+        attenderPhone:
+        document.getElementById("attenderPhone").value,
+
+        doctor:document.getElementById("doctor").value,
+
+        disease:document.getElementById("disease").value,
+
+        department:
+        document.getElementById("department").value,
+
+        room:document.getElementById("room").value,
+
+        admission:
+        document.getElementById("admission").value,
+
+        status:
+        document.getElementById("status").value,
+
+        bill:
+        Number(document.getElementById("bill").value),
+
+        remarks:
+        document.getElementById("remarks").value
+    };
+
+
+    if(patient.name === "" ||
+       patient.phone === "" ||
+       patient.doctor === ""){
+
+        alert("Please enter patient name, phone and doctor name");
+
+        return;
+    }
+
+
+    if(editIndex === -1){
+
+        patients.push(patient);
+
+    }else{
+
+        patients[editIndex] = patient;
+
+        editIndex = -1;
+    }
+
+
+    displayPatients();
+
+    updateDashboard();
+
+    clearForm();
+
+}
+
+
+/* Display Patients */
+
+function displayPatients(){
+
+    let tbody =
+    document.querySelector("#patientTable tbody");
+
+    tbody.innerHTML = "";
+
+
+    let search =
+    document.getElementById("search")
+    .value.toLowerCase();
+
+
+    patients.forEach((p,index)=>{
+
+        if(
+        p.name.toLowerCase().includes(search) ||
+        p.doctor.toLowerCase().includes(search) ||
+        p.disease.toLowerCase().includes(search)
+        ){
+
+            let row = tbody.insertRow();
+
+
+            row.innerHTML = `
+
+            <td>${index+1}</td>
+
+            <td>${p.name}</td>
+
+            <td>${p.age}</td>
+
+            <td>${p.phone}</td>
+
+            <td>${p.attender}</td>
+
+            <td>${p.doctor}</td>
+
+            <td>${p.disease}</td>
+
+            <td>${p.department}</td>
+
+            <td>${p.room}</td>
+
+            <td>${p.status}</td>
+
+            <td>₹${p.bill}</td>
+
+            <td>
+
+            <button onclick="editPatient(${index})">
+            Edit
+            </button>
+
+            <button onclick="deletePatient(${index})">
+            Delete
+            </button>
+
+            </td>
+
+            `;
+        }
+
+    });
+
+}
+
+
+/* Edit Patient */
+
+function editPatient(index){
+
+    let p = patients[index];
+
+
+    document.getElementById("name").value = p.name;
+
+    document.getElementById("age").value = p.age;
+
+    document.getElementById("gender").value = p.gender;
+
+    document.getElementById("phone").value = p.phone;
+
+    document.getElementById("email").value = p.email;
+
+    document.getElementById("address").value = p.address;
+
+    document.getElementById("attender").value = p.attender;
+
+    document.getElementById("attenderPhone").value =
+    p.attenderPhone;
+
+    document.getElementById("doctor").value = p.doctor;
+
+    document.getElementById("disease").value = p.disease;
+
+    document.getElementById("department").value =
+    p.department;
+
+    document.getElementById("room").value = p.room;
+
+    document.getElementById("admission").value =
+    p.admission;
+
+    document.getElementById("status").value = p.status;
+
+    document.getElementById("bill").value = p.bill;
+
+    document.getElementById("remarks").value = p.remarks;
+
+
+    editIndex = index;
+
+}
+
+
+/* Delete Patient */
+
+function deletePatient(index){
+
+    if(confirm("Delete this patient record?")){
+
+        patients.splice(index,1);
+
+        displayPatients();
+
+        updateDashboard();
+    }
+
+}
+
+
+/* Dashboard */
+
+function updateDashboard(){
+
+    document.getElementById("totalPatients")
+    .innerText = patients.length;
+
+
+    let admitted = 0;
+
+    let discharged = 0;
+
+    let totalBill = 0;
+
+
+    patients.forEach(p=>{
+
+        if(p.status === "Admitted" ||
+           p.status === "Under Treatment" ||
+           p.status === "Emergency"){
+
+            admitted++;
+        }
+
+
+        if(p.status === "Discharged"){
+
+            discharged++;
+        }
+
+
+        totalBill += p.bill;
+
+    });
+
+
+    document.getElementById("admittedPatients")
+    .innerText = admitted;
+
+
+    document.getElementById("dischargedPatients")
+    .innerText = discharged;
+
+
+    document.getElementById("totalBill")
+    .innerText =
+    "₹" + totalBill.toFixed(2);
+
+}
+
+
+/* Clear Form */
+
+function clearForm(){
+
+    document.getElementById("name").value = "";
+
+    document.getElementById("age").value = "";
+
+    document.getElementById("gender").value = "";
+
+    document.getElementById("phone").value = "";
+
+    document.getElementById("email").value = "";
+
+    document.getElementById("address").value = "";
+
+    document.getElementById("attender").value = "";
+
+    document.getElementById("attenderPhone").value = "";
+
+    document.getElementById("doctor").value = "";
+
+    document.getElementById("disease").value = "";
+
+    document.getElementById("department").value =
+    "Select Department";
+
+    document.getElementById("room").value = "";
+
+    document.getElementById("admission").value = "";
+
+    document.getElementById("status").value =
+    "Admitted";
+
+    document.getElementById("bill").value = "";
+
+    document.getElementById("remarks").value = "";
+
+    editIndex = -1;
+
+}
+
+
+/* Export CSV */
+
+function exportCSV(){
+
+    if(patients.length === 0){
+
+        alert("No patient records available");
+
+        return;
+    }
+
+
+    let csv =
+    "Patient Name,Age,Gender,Phone,Email,Address,Attender,Attender Phone,Doctor,Disease,Department,Room,Admission Date,Status,Bill,Remarks\n";
+
+
+    patients.forEach(p=>{
+
+        csv +=
+        `"${p.name}","${p.age}","${p.gender}",
+"${p.phone}","${p.email}","${p.address}",
+"${p.attender}","${p.attenderPhone}",
+"${p.doctor}","${p.disease}","${p.department}",
+"${p.room}","${p.admission}","${p.status}",
+"${p.bill}","${p.remarks}"\n`;
+
+    });
+
+
+    let blob =
+    new Blob([csv],{type:"text/csv"});
+
+
+    let url =
+    URL.createObjectURL(blob);
+
+
+    let a =
+    document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+    "hospital_patient_records.csv";
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chennai Property Buying & Rental</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef4f8;
+}
+
+header {
+    background: #1565c0;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px #aaa;
+}
+
+h2 {
+    color: #1565c0;
+    text-align: center;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.full {
+    grid-column: 1 / 3;
+}
+
+.search-btn {
+    width: 100%;
+    padding: 13px;
+    background: #1565c0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background: #0d47a1;
+}
+
+#results {
+    margin-top: 30px;
+    display: none;
+}
+
+.property-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 15px;
+    box-shadow: 0 2px 7px #ccc;
+    background: #fafafa;
+}
+
+.property-card h3 {
+    color: #1565c0;
+}
+
+.price {
+    color: #2e7d32;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.view-btn {
+    background: #2e7d32;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer {
+    margin-top: 30px;
+    padding: 15px;
+    background: #1565c0;
+    color: white;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏠 Chennai Property Buying & Rental System</h1>
+    <p>Cloud-Based SaaS Application</p>
+</header>
+
+<div class="container">
+
+<h2>Search Properties</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Purpose</label>
+<select id="purpose">
+    <option value="Buy">Buy</option>
+    <option value="Rent">Rent</option>
+</select>
+</div>
+
+<div>
+<label>Property Category</label>
+<select id="category">
+    <option value="Residential">Residential</option>
+    <option value="Commercial">Commercial</option>
+</select>
+</div>
+
+<div>
+<label>Property Type</label>
+<select id="type">
+    <option>Apartment</option>
+    <option>Villa</option>
+    <option>Independent House</option>
+    <option>Office</option>
+    <option>Shop</option>
+</select>
+</div>
+
+<div>
+<label>Area</label>
+<input type="text" id="area" placeholder="Example: 1200 sq.ft">
+</div>
+
+<div>
+<label>Place</label>
+<select id="place">
+    <option>Anna Nagar</option>
+    <option>Velachery</option>
+    <option>Adyar</option>
+    <option>Tambaram</option>
+    <option>OMR</option>
+    <option>Porur</option>
+    <option>T Nagar</option>
+</select>
+</div>
+
+<div>
+<label>Price Range</label>
+<select id="range">
+    <option>Below ₹50 Lakhs</option>
+    <option>₹50 Lakhs - ₹1 Crore</option>
+    <option>₹1 Crore - ₹2 Crores</option>
+    <option>Above ₹2 Crores</option>
+</select>
+</div>
+
+<div>
+<label>Property Value</label>
+<input type="number" id="value" placeholder="Enter value">
+</div>
+
+<div>
+<label>Rental Agreement</label>
+<select id="agreement">
+    <option>Not Required</option>
+    <option>11 Months</option>
+    <option>1 Year</option>
+    <option>2 Years</option>
+</select>
+</div>
+
+<div class="full">
+<button class="search-btn" onclick="searchProperty()">
+🔍 Search Property
+</button>
+</div>
+
+</div>
+
+<div id="results">
+<h2>Available Properties</h2>
+<div id="propertyList"></div>
+</div>
+
+</div>
+
+<footer>
+Cloud Computing Lab | Property Buying & Rental SaaS
+</footer>
+
+<script>
+
+function searchProperty() {
+
+let purpose = document.getElementById("purpose").value;
+let category = document.getElementById("category").value;
+let type = document.getElementById("type").value;
+let area = document.getElementById("area").value;
+let place = document.getElementById("place").value;
+let range = document.getElementById("range").value;
+let value = document.getElementById("value").value;
+let agreement = document.getElementById("agreement").value;
+
+if (area === "" || value === "") {
+    alert("Please enter Area and Property Value.");
+    return;
+}
+
+let properties = [
+
+{
+name: "Green Valley Apartment",
+type: "Apartment",
+category: "Residential",
+place: "Anna Nagar",
+area: "1200 sq.ft",
+value: "₹85 Lakhs",
+rent: "₹25,000/month",
+agreement: "11 Months"
+},
+
+{
+name: "Sea View Villa",
+type: "Villa",
+category: "Residential",
+place: "Adyar",
+area: "1800 sq.ft",
+value: "₹1.5 Crores",
+rent: "₹45,000/month",
+agreement: "1 Year"
+},
+
+{
+name: "OMR Tech Office",
+type: "Office",
+category: "Commercial",
+place: "OMR",
+area: "2500 sq.ft",
+value: "₹2.2 Crores",
+rent: "₹80,000/month",
+agreement: "2 Years"
+},
+
+{
+name: "Velachery Home",
+type: "Independent House",
+category: "Residential",
+place: "Velachery",
+area: "1500 sq.ft",
+value: "₹95 Lakhs",
+rent: "₹30,000/month",
+agreement: "11 Months"
+},
+
+{
+name: "T Nagar Shop",
+type: "Shop",
+category: "Commercial",
+place: "T Nagar",
+area: "900 sq.ft",
+value: "₹1.8 Crores",
+rent: "₹70,000/month",
+agreement: "1 Year"
+}
+
+];
+
+let list = document.getElementById("propertyList");
+let results = document.getElementById("results");
+
+results.style.display = "block";
+list.innerHTML = "";
+
+let found = false;
+
+properties.forEach(function(property) {
+
+if (
+    property.category === category &&
+    property.type === type &&
+    property.place === place
+) {
+
+found = true;
+
+list.innerHTML += `
+
+<div class="property-card">
+
+<h3>🏠 ${property.name}</h3>
+
+<p><b>Category:</b> ${property.category}</p>
+
+<p><b>Property Type:</b> ${property.type}</p>
+
+<p><b>Location:</b> ${property.place}, Chennai</p>
+
+<p><b>Area:</b> ${property.area}</p>
+
+<p><b>Property Value:</b> ${property.value}</p>
+
+<p><b>Monthly Rent:</b> ${property.rent}</p>
+
+<p><b>Rental Agreement:</b> ${property.agreement}</p>
+
+<p><b>Purpose:</b> ${purpose}</p>
+
+<p class="price">
+${purpose === "Buy" ? property.value : property.rent}
+</p>
+
+<button class="view-btn"
+onclick="viewProperty('${property.name}')">
+View Property
+</button>
+
+</div>
+
+`;
+
+}
+
+});
+
+if (!found) {
+
+list.innerHTML = `
+<div class="property-card">
+<h3>No Properties Found</h3>
+<p>No matching property is available for the selected requirements.</p>
+</div>
+`;
+
+}
+
+}
+
+function viewProperty(name) {
+
+alert(
+"Property Selected!\n\n" +
+"Property: " + name +
+"\n\nYou can contact the owner for more details."
+);
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Student Counselling System</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef4f8;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    width:90%;
+    margin:20px auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 2px 8px #bbb;
+}
+
+h2{
+    color:#1565c0;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    box-sizing:border-box;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+textarea{
+    height:80px;
+}
+
+button{
+    padding:10px 18px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
+    background:#1565c0;
+    margin:5px;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    text-align:center;
+    border-radius:10px;
+    box-shadow:0 2px 6px #ccc;
+}
+
+.stat h3{
+    color:#1565c0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+}
+
+.search{
+    width:300px;
+    margin-bottom:10px;
+}
+
+@media(max-width:800px){
+    .form-grid,.dashboard{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>☁ Cloud Student Counselling System</h1>
+    <p>SaaS Based Student Counselling Management</p>
+</header>
+
+<div class="container">
+
+<!-- Dashboard -->
+
+<div class="dashboard">
+
+<div class="stat">
+<h3>Total Students</h3>
+<p id="totalStudents">0</p>
+</div>
+
+<div class="stat">
+<h3>Average Percentage</h3>
+<p id="averagePercentage">0%</p>
+</div>
+
+<div class="stat">
+<h3>Career Interested</h3>
+<p id="careerStudents">0</p>
+</div>
+
+<div class="stat">
+<h3>Counselled</h3>
+<p id="counselledStudents">0</p>
+</div>
+
+</div>
+
+
+<!-- Student Details -->
+
+<div class="card">
+
+<h2>Student Counselling Details</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Student Name</label>
+<input type="text" id="name"
+placeholder="Enter student name">
+</div>
+
+<div>
+<label>Age</label>
+<input type="number" id="age"
+placeholder="Enter age">
+</div>
+
+<div>
+<label>Phone Number</label>
+<input type="text" id="phone"
+placeholder="Enter phone number">
+</div>
+
+<div>
+<label>Year of Passing</label>
+<input type="number" id="year"
+placeholder="Example: 2026">
+</div>
+
+<div>
+<label>Percentage of Marks</label>
+<input type="number" id="percentage"
+placeholder="Enter percentage"
+min="0" max="100">
+</div>
+
+<div>
+<label>Domain Interest</label>
+<select id="domain">
+<option value="">Select Domain</option>
+<option>Artificial Intelligence</option>
+<option>Data Science</option>
+<option>Cloud Computing</option>
+<option>Cyber Security</option>
+<option>Web Development</option>
+<option>Software Development</option>
+<option>IoT</option>
+<option>Networking</option>
+</select>
+</div>
+
+<div>
+<label>Subjects Studied</label>
+<input type="text" id="subjects"
+placeholder="Example: Java, Python, DBMS">
+</div>
+
+<div>
+<label>Counselling Status</label>
+<select id="status">
+<option>Pending</option>
+<option>Counselled</option>
+<option>Follow-up</option>
+</select>
+</div>
+
+<div>
+<label>Career Goal</label>
+<input type="text" id="career"
+placeholder="Example: Software Engineer">
+</div>
+
+<div>
+<label>Address</label>
+<textarea id="address"
+placeholder="Enter address"></textarea>
+</div>
+
+<div>
+<label>Counsellor Name</label>
+<input type="text" id="counsellor"
+placeholder="Enter counsellor name">
+</div>
+
+<div>
+<label>Counselling Remarks</label>
+<textarea id="remarks"
+placeholder="Enter remarks"></textarea>
+</div>
+
+</div>
+
+<br>
+
+<button onclick="addStudent()">Add Student</button>
+<button onclick="clearForm()">Clear</button>
+
+</div>
+
+
+<!-- Counselling Records -->
+
+<div class="card">
+
+<h2>Student Counselling Records</h2>
+
+<input class="search"
+type="text"
+id="search"
+placeholder="Search student..."
+onkeyup="displayStudents()">
+
+<button onclick="window.print()">Print</button>
+<button onclick="exportCSV()">Export CSV</button>
+
+<table id="studentTable">
+
+<thead>
+<tr>
+<th>S.No</th>
+<th>Name</th>
+<th>Age</th>
+<th>Phone</th>
+<th>Subjects</th>
+<th>Passing Year</th>
+<th>Percentage</th>
+<th>Domain</th>
+<th>Career Goal</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+
+<!-- Counselling Guidelines -->
+
+<div class="card">
+
+<h2>Counselling Recommendation</h2>
+
+<table>
+
+<tr>
+<th>Percentage</th>
+<th>Recommended Level</th>
+</tr>
+
+<tr>
+<td>90 - 100%</td>
+<td>Advanced Career Opportunities</td>
+</tr>
+
+<tr>
+<td>75 - 89%</td>
+<td>Good Career Opportunities</td>
+</tr>
+
+<tr>
+<td>60 - 74%</td>
+<td>Skill Development Recommended</td>
+</tr>
+
+<tr>
+<td>Below 60%</td>
+<td>Foundation & Career Guidance</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+
+<script>
+
+let students = [];
+let editIndex = -1;
+
+
+/* Add Student */
+
+function addStudent(){
+
+    let name =
+    document.getElementById("name").value;
+
+    let age =
+    document.getElementById("age").value;
+
+    let address =
+    document.getElementById("address").value;
+
+    let phone =
+    document.getElementById("phone").value;
+
+    let subjects =
+    document.getElementById("subjects").value;
+
+    let year =
+    document.getElementById("year").value;
+
+    let percentage =
+    Number(document.getElementById("percentage").value);
+
+    let domain =
+    document.getElementById("domain").value;
+
+    let career =
+    document.getElementById("career").value;
+
+    let status =
+    document.getElementById("status").value;
+
+    let counsellor =
+    document.getElementById("counsellor").value;
+
+    let remarks =
+    document.getElementById("remarks").value;
+
+
+    if(name === "" || phone === "" || domain === ""){
+
+        alert("Please enter required details");
+
+        return;
+    }
+
+
+    let student = {
+
+        name:name,
+        age:age,
+        address:address,
+        phone:phone,
+        subjects:subjects,
+        year:year,
+        percentage:percentage,
+        domain:domain,
+        career:career,
+        status:status,
+        counsellor:counsellor,
+        remarks:remarks
+    };
+
+
+    if(editIndex === -1){
+
+        students.push(student);
+
+    }else{
+
+        students[editIndex] = student;
+
+        editIndex = -1;
+    }
+
+
+    displayStudents();
+
+    updateDashboard();
+
+    clearForm();
+
+}
+
+
+/* Display Students */
+
+function displayStudents(){
+
+    let tbody =
+    document.querySelector("#studentTable tbody");
+
+    tbody.innerHTML = "";
+
+    let search =
+    document.getElementById("search")
+    .value.toLowerCase();
+
+
+    students.forEach((s,index)=>{
+
+        if(
+        s.name.toLowerCase().includes(search) ||
+        s.domain.toLowerCase().includes(search)
+        ){
+
+            let row = tbody.insertRow();
+
+
+            row.innerHTML = `
+
+            <td>${index+1}</td>
+
+            <td>${s.name}</td>
+
+            <td>${s.age}</td>
+
+            <td>${s.phone}</td>
+
+            <td>${s.subjects}</td>
+
+            <td>${s.year}</td>
+
+            <td>${s.percentage}%</td>
+
+            <td>${s.domain}</td>
+
+            <td>${s.career}</td>
+
+            <td>${s.status}</td>
+
+            <td>
+
+            <button onclick="editStudent(${index})">
+            Edit
+            </button>
+
+            <button onclick="deleteStudent(${index})">
+            Delete
+            </button>
+
+            </td>
+
+            `;
+        }
+
+    });
+
+}
+
+
+/* Edit Student */
+
+function editStudent(index){
+
+    let s = students[index];
+
+
+    document.getElementById("name").value = s.name;
+
+    document.getElementById("age").value = s.age;
+
+    document.getElementById("address").value = s.address;
+
+    document.getElementById("phone").value = s.phone;
+
+    document.getElementById("subjects").value = s.subjects;
+
+    document.getElementById("year").value = s.year;
+
+    document.getElementById("percentage").value =
+    s.percentage;
+
+    document.getElementById("domain").value = s.domain;
+
+    document.getElementById("career").value = s.career;
+
+    document.getElementById("status").value = s.status;
+
+    document.getElementById("counsellor").value =
+    s.counsellor;
+
+    document.getElementById("remarks").value =
+    s.remarks;
+
+
+    editIndex = index;
+
+}
+
+
+/* Delete Student */
+
+function deleteStudent(index){
+
+    if(confirm("Delete this student?")){
+
+        students.splice(index,1);
+
+        displayStudents();
+
+        updateDashboard();
+    }
+
+}
+
+
+/* Dashboard */
+
+function updateDashboard(){
+
+    document.getElementById("totalStudents")
+    .innerText = students.length;
+
+
+    let totalPercentage = 0;
+
+    let career = 0;
+
+    let counselled = 0;
+
+
+    students.forEach(s=>{
+
+        totalPercentage += s.percentage;
+
+        if(s.career !== "")
+            career++;
+
+        if(s.status === "Counselled")
+            counselled++;
+
+    });
+
+
+    let average =
+    students.length ?
+    totalPercentage / students.length : 0;
+
+
+    document.getElementById("averagePercentage")
+    .innerText =
+    average.toFixed(2) + "%";
+
+
+    document.getElementById("careerStudents")
+    .innerText = career;
+
+
+    document.getElementById("counselledStudents")
+    .innerText = counselled;
+
+}
+
+
+/* Clear Form */
+
+function clearForm(){
+
+    document.getElementById("name").value = "";
+
+    document.getElementById("age").value = "";
+
+    document.getElementById("address").value = "";
+
+    document.getElementById("phone").value = "";
+
+    document.getElementById("subjects").value = "";
+
+    document.getElementById("year").value = "";
+
+    document.getElementById("percentage").value = "";
+
+    document.getElementById("domain").value = "";
+
+    document.getElementById("career").value = "";
+
+    document.getElementById("status").value =
+    "Pending";
+
+    document.getElementById("counsellor").value = "";
+
+    document.getElementById("remarks").value = "";
+
+    editIndex = -1;
+
+}
+
+
+/* Export CSV */
+
+function exportCSV(){
+
+    if(students.length === 0){
+
+        alert("No student records available");
+
+        return;
+    }
+
+
+    let csv =
+    "Name,Age,Address,Phone,Subjects,Passing Year,Percentage,Domain,Career Goal,Status,Counsellor,Remarks\n";
+
+
+    students.forEach(s=>{
+
+        csv +=
+        `"${s.name}","${s.age}","${s.address}",
+"${s.phone}","${s.subjects}","${s.year}",
+"${s.percentage}","${s.domain}","${s.career}",
+"${s.status}","${s.counsellor}","${s.remarks}"\n`;
+
+    });
+
+
+    let blob =
+    new Blob([csv],{type:"text/csv"});
+
+
+    let url =
+    URL.createObjectURL(blob);
+
+
+    let a =
+    document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+    "student_counselling.csv";
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+</script>
+
+</body>
+</html>

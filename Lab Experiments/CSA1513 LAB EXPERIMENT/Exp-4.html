@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SIMATS Cloud Library</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef3f8;
+        }
+
+        header {
+            background: #1565c0;
+            color: white;
+            padding: 18px;
+            text-align: center;
+        }
+
+        nav {
+            background: #0d47a1;
+            padding: 12px;
+            text-align: center;
+        }
+
+        nav button {
+            background: white;
+            color: #0d47a1;
+            border: none;
+            padding: 10px 18px;
+            margin: 4px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .container {
+            width: 94%;
+            margin: 20px auto;
+        }
+
+        .page {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .cards {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #f5f8fc;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        input, select {
+            padding: 11px;
+            margin: 6px;
+            width: 30%;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 18px;
+            background: #1565c0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d47a1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 9px;
+            text-align: center;
+        }
+
+        th {
+            background: #1565c0;
+            color: white;
+        }
+
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+
+        .taken {
+            color: red;
+            font-weight: bold;
+        }
+
+        .login {
+            width: 400px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px #bbb;
+        }
+
+        .login input {
+            width: 90%;
+        }
+
+        .google {
+            background: #db4437;
+            width: 90%;
+            margin-top: 10px;
+        }
+
+        .logout {
+            background: #d32f2f;
+        }
+
+        @media(max-width:700px) {
+            input, select {
+                width: 90%;
+            }
+
+            .login {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+
+<div id="loginPage" class="login">
+
+    <h1>📚 SIMATS Library</h1>
+    <h3>Cloud Book Reservation System</h3>
+
+    <input type="text" id="username" placeholder="Student Name">
+    <input type="text" id="regno" placeholder="Register Number">
+
+    <br><br>
+
+    <button onclick="login()">Login</button>
+
+    <br>
+
+    <button class="google" onclick="googleLogin()">
+        Sign in with Google
+    </button>
+
+</div>
+
+
+<!-- MAIN APPLICATION -->
+
+<div id="mainApp" style="display:none;">
+
+<header>
+    <h1>📚 SIMATS Cloud Library</h1>
+    <p>Library Book Reservation SaaS</p>
+</header>
+
+<nav>
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('books')">Books</button>
+    <button onclick="showPage('reserve')">Reserve Book</button>
+    <button onclick="showPage('history')">My Reservations</button>
+    <button onclick="showPage('cloud')">Cloud / SaaS</button>
+    <button class="logout" onclick="logout()">Logout</button>
+</nav>
+
+<div class="container">
+
+<!-- HOME -->
+
+<div id="home" class="page active">
+
+    <h2>Dashboard</h2>
+
+    <p id="welcome"></p>
+
+    <div class="cards">
+
+        <div class="card">
+            <h2 id="totalBooks">0</h2>
+            <p>Total Books</p>
+        </div>
+
+        <div class="card">
+            <h2 id="availableBooks">0</h2>
+            <p>Available Books</p>
+        </div>
+
+        <div class="card">
+            <h2 id="takenBooks">0</h2>
+            <p>Taken Books</p>
+        </div>
+
+        <div class="card">
+            <h2 id="myBooks">0</h2>
+            <p>My Reservations</p>
+        </div>
+
+    </div>
+
+    <h3>Library Features</h3>
+
+    <p>
+        ✔ Search Books &nbsp;
+        ✔ Reserve Books &nbsp;
+        ✔ Return Books &nbsp;
+        ✔ Check Availability &nbsp;
+        ✔ Reservation History &nbsp;
+        ✔ Cloud SaaS Access
+    </p>
+
+</div>
+
+
+<!-- BOOKS -->
+
+<div id="books" class="page">
+
+    <h2>📖 Library Book Catalogue</h2>
+
+    <input type="text"
+           id="search"
+           placeholder="Search title or author"
+           onkeyup="displayBooks()">
+
+    <select id="filterStatus" onchange="displayBooks()">
+        <option value="All">All Books</option>
+        <option value="Available">Available</option>
+        <option value="Taken">Taken</option>
+    </select>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Publication</th>
+                <th>Year</th>
+                <th>Edition</th>
+                <th>Copies</th>
+                <th>Rack No</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="bookTable"></tbody>
+
+    </table>
+
+</div>
+
+
+<!-- RESERVE -->
+
+<div id="reserve" class="page">
+
+    <h2>📚 Reserve a Book</h2>
+
+    <input type="text"
+           id="reserveSearch"
+           placeholder="Search book"
+           onkeyup="showReserveBooks()">
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Rack</th>
+                <th>Available Copies</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="reserveTable"></tbody>
+
+    </table>
+
+</div>
+
+
+<!-- HISTORY -->
+
+<div id="history" class="page">
+
+    <h2>📋 My Reservations</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Reservation ID</th>
+                <th>Book</th>
+                <th>Student</th>
+                <th>Register No</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="historyTable"></tbody>
+
+    </table>
+
+</div>
+
+
+<!-- CLOUD -->
+
+<div id="cloud" class="page">
+
+    <h2>☁ Cloud Computing / SaaS</h2>
+
+    <p>
+        This application demonstrates the Software as a Service (SaaS)
+        model for SIMATS Library management.
+    </p>
+
+    <h3>Cloud Architecture</h3>
+
+    <div class="card">
+
+        👨‍🎓 Student
+
+        ↓
+
+        🌐 Web Browser
+
+        ↓
+
+        ☁ Cloud Library Application
+
+        ↓
+
+        🖥 Cloud Server
+
+        ↓
+
+        🗄 Cloud Database
+
+    </div>
+
+    <h3>Cloud Features</h3>
+
+    <p>
+        • Online access<br>
+        • Centralized book database<br>
+        • Book reservation<br>
+        • Availability tracking<br>
+        • User management<br>
+        • Reservation history<br>
+        • Scalable cloud service
+    </p>
+
+    <h3>Cloud Service Provider</h3>
+
+    <p>
+        The application can be deployed using cloud providers such as
+        AWS, Microsoft Azure, or Google Cloud.
+    </p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+var books = [
+
+    {
+        title:"Data Structures",
+        author:"Mark Allen",
+        publication:"Pearson",
+        year:2023,
+        edition:"3rd",
+        copies:5,
+        rack:"A1"
+    },
+
+    {
+        title:"Computer Networks",
+        author:"Andrew Tanenbaum",
+        publication:"Pearson",
+        year:2022,
+        edition:"6th",
+        copies:4,
+        rack:"A2"
+    },
+
+    {
+        title:"Operating Systems",
+        author:"Abraham Silberschatz",
+        publication:"Wiley",
+        year:2023,
+        edition:"10th",
+        copies:6,
+        rack:"B1"
+    },
+
+    {
+        title:"Database Management",
+        author:"Raghu Ramakrishnan",
+        publication:"McGraw Hill",
+        year:2021,
+        edition:"4th",
+        copies:3,
+        rack:"B2"
+    },
+
+    {
+        title:"Artificial Intelligence",
+        author:"Stuart Russell",
+        publication:"Pearson",
+        year:2024,
+        edition:"4th",
+        copies:5,
+        rack:"C1"
+    },
+
+    {
+        title:"Cloud Computing",
+        author:"Rajkumar Buyya",
+        publication:"McGraw Hill",
+        year:2023,
+        edition:"2nd",
+        copies:4,
+        rack:"C2"
+    }
+
+];
+
+var reservations = [];
+
+var currentUser = "";
+
+function login() {
+
+    var name = document.getElementById("username").value;
+    var reg = document.getElementById("regno").value;
+
+    if(name == "" || reg == "") {
+        alert("Enter Student Name and Register Number");
+        return;
+    }
+
+    currentUser = name;
+
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+
+    document.getElementById("welcome").innerHTML =
+        "Welcome, <b>" + name + "</b> | Register No: " + reg;
+
+    displayBooks();
+    showReserveBooks();
+    displayHistory();
+    updateDashboard();
+}
+
+
+function googleLogin() {
+
+    currentUser = "Google User";
+
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("mainApp").style.display = "block";
+
+    document.getElementById("welcome").innerHTML =
+        "Welcome, <b>Google User</b>";
+
+    displayBooks();
+    showReserveBooks();
+    displayHistory();
+    updateDashboard();
+}
+
+
+function logout() {
+
+    document.getElementById("mainApp").style.display = "none";
+    document.getElementById("loginPage").style.display = "block";
+
+}
+
+
+function showPage(page) {
+
+    var pages = document.querySelectorAll(".page");
+
+    pages.forEach(function(p) {
+        p.classList.remove("active");
+    });
+
+    document.getElementById(page).classList.add("active");
+
+    displayBooks();
+    showReserveBooks();
+    displayHistory();
+    updateDashboard();
+}
+
+
+function displayBooks() {
+
+    var search =
+        document.getElementById("search").value.toLowerCase();
+
+    var filter =
+        document.getElementById("filterStatus").value;
+
+    var table =
+        document.getElementById("bookTable");
+
+    table.innerHTML = "";
+
+    books.forEach(function(book) {
+
+        var status =
+            book.copies > 0 ? "Available" : "Taken";
+
+        if(
+            (book.title.toLowerCase().includes(search) ||
+             book.author.toLowerCase().includes(search))
+            &&
+            (filter == "All" || filter == status)
+        ) {
+
+            var row = table.insertRow();
+
+            row.innerHTML =
+                "<td>" + book.title + "</td>" +
+                "<td>" + book.author + "</td>" +
+                "<td>" + book.publication + "</td>" +
+                "<td>" + book.year + "</td>" +
+                "<td>" + book.edition + "</td>" +
+                "<td>" + book.copies + "</td>" +
+                "<td>" + book.rack + "</td>" +
+                "<td class='" +
+                (status == "Available" ? "available" : "taken") +
+                "'>" + status + "</td>";
+        }
+
+    });
+
+}
+
+
+function showReserveBooks() {
+
+    var search =
+        document.getElementById("reserveSearch").value.toLowerCase();
+
+    var table =
+        document.getElementById("reserveTable");
+
+    table.innerHTML = "";
+
+    books.forEach(function(book) {
+
+        if(book.title.toLowerCase().includes(search)) {
+
+            var row = table.insertRow();
+
+            row.innerHTML =
+                "<td>" + book.title + "</td>" +
+                "<td>" + book.author + "</td>" +
+                "<td>" + book.rack + "</td>" +
+                "<td>" + book.copies + "</td>" +
+                "<td>" +
+                (book.copies > 0
+                    ? "<button onclick=\"reserveBook('" +
+                      book.title + "')\">Reserve</button>"
+                    : "Not Available") +
+                "</td>";
+        }
+
+    });
+
+}
+
+
+function reserveBook(title) {
+
+    var book = books.find(function(b) {
+        return b.title == title;
+    });
+
+    if(book.copies <= 0) {
+
+        alert("Book is not available");
+        return;
+    }
+
+    book.copies--;
+
+    var reservation = {
+
+        id: "SIM" + (1000 + reservations.length + 1),
+
+        title: title,
+
+        student: currentUser,
+
+        regno: document.getElementById("regno").value,
+
+        date: new Date().toLocaleDateString(),
+
+        status: "Taken"
+
+    };
+
+    reservations.push(reservation);
+
+    alert("Book Reserved Successfully!");
+
+    displayBooks();
+    showReserveBooks();
+    displayHistory();
+    updateDashboard();
+
+}
+
+
+function returnBook(id) {
+
+    var reservation =
+        reservations.find(function(r) {
+            return r.id == id;
+        });
+
+    if(reservation.status == "Returned") {
+
+        alert("Book already returned");
+        return;
+
+    }
+
+    var book =
+        books.find(function(b) {
+            return b.title == reservation.title;
+        });
+
+    book.copies++;
+
+    reservation.status = "Returned";
+
+    alert("Book Returned Successfully!");
+
+    displayBooks();
+    showReserveBooks();
+    displayHistory();
+    updateDashboard();
+
+}
+
+
+function displayHistory() {
+
+    var table =
+        document.getElementById("historyTable");
+
+    table.innerHTML = "";
+
+    reservations.forEach(function(r) {
+
+        var row = table.insertRow();
+
+        row.innerHTML =
+            "<td>" + r.id + "</td>" +
+            "<td>" + r.title + "</td>" +
+            "<td>" + r.student + "</td>" +
+            "<td>" + r.regno + "</td>" +
+            "<td>" + r.date + "</td>" +
+            "<td>" + r.status + "</td>" +
+            "<td>" +
+            (r.status == "Taken"
+                ? "<button onclick=\"returnBook('" +
+                  r.id + "')\">Return</button>"
+                : "Completed") +
+            "</td>";
+
+    });
+
+}
+
+
+function updateDashboard() {
+
+    var total = 0;
+    var available = 0;
+
+    books.forEach(function(book) {
+
+        total += book.copies;
+
+        if(book.copies > 0) {
+            available++;
+        }
+
+    });
+
+    document.getElementById("totalBooks").innerHTML =
+        books.length;
+
+    document.getElementById("availableBooks").innerHTML =
+        available;
+
+    document.getElementById("takenBooks").innerHTML =
+        books.length - available;
+
+    document.getElementById("myBooks").innerHTML =
+        reservations.filter(function(r) {
+            return r.status == "Taken";
+        }).length;
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cloud Mark Sheet Processing System</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#eef4f8;
+}
+
+header{
+    background:#1565c0;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    width:95%;
+    max-width:1300px;
+    margin:25px auto;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 3px 10px #bbb;
+}
+
+h2{
+    color:#1565c0;
+}
+
+.form{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+input,select{
+    padding:12px;
+    border:1px solid #bbb;
+    border-radius:5px;
+    width:100%;
+}
+
+button{
+    padding:11px 18px;
+    border:0;
+    border-radius:5px;
+    background:#1565c0;
+    color:white;
+    cursor:pointer;
+    margin:5px;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+.result{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.result-box{
+    background:#e3f2fd;
+    padding:15px;
+    text-align:center;
+    border-radius:8px;
+}
+
+.result-box h3{
+    margin:5px;
+    color:#1565c0;
+}
+
+.result-box p{
+    font-size:18px;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+    min-width:1200px;
+}
+
+th{
+    background:#1565c0;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+
+.search{
+    margin-bottom:10px;
+}
+
+.delete{
+    background:#d32f2f;
+}
+
+.print{
+    background:#388e3c;
+}
+
+.grade{
+    color:#1565c0;
+    font-weight:bold;
+}
+
+footer{
+    background:#1565c0;
+    color:white;
+    text-align:center;
+    padding:15px;
+    margin-top:30px;
+}
+
+@media(max-width:900px){
+
+    .form{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .result{
+        grid-template-columns:1fr 1fr;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .form{
+        grid-template-columns:1fr;
+    }
+
+    .result{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+<h1>☁️ Cloud Mark Sheet Processing System</h1>
+
+<p>SaaS Based Student Mark Sheet Management</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- STUDENT DETAILS -->
+
+<div class="card">
+
+<h2>Student Information</h2>
+
+<div class="form">
+
+<input
+type="text"
+id="name"
+placeholder="Student Name">
+
+<input
+type="text"
+id="regno"
+placeholder="Register Number">
+
+<input
+type="text"
+id="department"
+placeholder="Department">
+
+<select id="semester">
+
+<option value="">Select Semester</option>
+<option>Semester 1</option>
+<option>Semester 2</option>
+<option>Semester 3</option>
+<option>Semester 4</option>
+<option>Semester 5</option>
+<option>Semester 6</option>
+<option>Semester 7</option>
+<option>Semester 8</option>
+
+</select>
+
+
+<!-- SUBJECTS -->
+
+<input
+type="number"
+id="english"
+placeholder="English (100)"
+min="0"
+max="100">
+
+<input
+type="number"
+id="maths"
+placeholder="Mathematics (100)"
+min="0"
+max="100">
+
+<input
+type="number"
+id="physics"
+placeholder="Physics (100)"
+min="0"
+max="100">
+
+<input
+type="number"
+id="chemistry"
+placeholder="Chemistry (100)"
+min="0"
+max="100">
+
+<input
+type="number"
+id="programming"
+placeholder="Programming (100)"
+min="0"
+max="100">
+
+<input
+type="number"
+id="datascience"
+placeholder="Data Science (100)"
+min="0"
+max="100">
+
+<input
+type="number"
+id="cloud"
+placeholder="Cloud Computing (100)"
+min="0"
+max="100">
+
+<input
+type="number"
+id="os"
+placeholder="Operating System (100)"
+min="0"
+max="100">
+
+</div>
+
+<br>
+
+<p>
+<strong>Total Maximum Marks: 800</strong>
+</p>
+
+<button onclick="calculate()">
+Calculate Result
+</button>
+
+<button onclick="clearForm()">
+Clear
+</button>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div class="card">
+
+<h2>Result Summary</h2>
+
+<div class="result">
+
+
+<div class="result-box">
+
+<h3>Total Marks</h3>
+
+<p id="total">0 / 800</p>
+
+</div>
+
+
+<div class="result-box">
+
+<h3>Average</h3>
+
+<p id="average">0</p>
+
+</div>
+
+
+<div class="result-box">
+
+<h3>Percentage</h3>
+
+<p id="percentage">0%</p>
+
+</div>
+
+
+<div class="result-box">
+
+<h3>Grade</h3>
+
+<p id="grade">-</p>
+
+</div>
+
+
+<div class="result-box">
+
+<h3>Result</h3>
+
+<p id="status">-</p>
+
+</div>
+
+
+<div class="result-box">
+
+<h3>Performance</h3>
+
+<p id="performance">-</p>
+
+</div>
+
+
+<div class="result-box">
+
+<h3>Rank</h3>
+
+<p id="rank">-</p>
+
+</div>
+
+
+<div class="result-box">
+
+<h3>Maximum</h3>
+
+<p>800</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- GRADING SYSTEM -->
+
+<div class="card">
+
+<h2>Grading System</h2>
+
+<table style="min-width:100%;">
+
+<tr>
+<th>Percentage</th>
+<th>Grade</th>
+<th>Performance</th>
+</tr>
+
+<tr>
+<td>90% - 100%</td>
+<td>A+</td>
+<td>Outstanding</td>
+</tr>
+
+<tr>
+<td>80% - 89%</td>
+<td>A</td>
+<td>Excellent</td>
+</tr>
+
+<tr>
+<td>70% - 79%</td>
+<td>B+</td>
+<td>Very Good</td>
+</tr>
+
+<tr>
+<td>60% - 69%</td>
+<td>B</td>
+<td>Good</td>
+</tr>
+
+<tr>
+<td>50% - 59%</td>
+<td>C</td>
+<td>Average</td>
+</tr>
+
+<tr>
+<td>40% - 49%</td>
+<td>D</td>
+<td>Pass</td>
+</tr>
+
+<tr>
+<td>Below 40%</td>
+<td>F</td>
+<td>Fail</td>
+</tr>
+
+</table>
+
+</div>
+
+
+
+<!-- STUDENT RECORDS -->
+
+<div class="card">
+
+<h2>Student Records</h2>
+
+<input
+class="search"
+type="text"
+id="search"
+placeholder="Search Student Name or Register Number"
+onkeyup="searchStudent()">
+
+<br>
+
+<button
+class="print"
+onclick="window.print()">
+
+Print Mark Sheet
+
+</button>
+
+
+<table id="studentTable">
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+
+<th>Register No</th>
+
+<th>Department</th>
+
+<th>Total</th>
+
+<th>Average</th>
+
+<th>Percentage</th>
+
+<th>Grade</th>
+
+<th>Rank</th>
+
+<th>Result</th>
+
+<th>Performance</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="tableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+Cloud Computing Lab |
+SaaS Mark Sheet Processing System
+
+</footer>
+
+
+
+<script>
+
+let students = [];
+
+
+/* CALCULATE RESULT */
+
+function calculate(){
+
+    let name =
+        document.getElementById("name").value;
+
+    let regno =
+        document.getElementById("regno").value;
+
+    let department =
+        document.getElementById("department").value;
+
+    let semester =
+        document.getElementById("semester").value;
+
+
+    if(
+        name === "" ||
+        regno === "" ||
+        department === "" ||
+        semester === ""
+    ){
+
+        alert("Please enter all student details");
+
+        return;
+
+    }
+
+
+    /* GET MARKS */
+
+    let english =
+        Number(document.getElementById("english").value);
+
+    let maths =
+        Number(document.getElementById("maths").value);
+
+    let physics =
+        Number(document.getElementById("physics").value);
+
+    let chemistry =
+        Number(document.getElementById("chemistry").value);
+
+    let programming =
+        Number(document.getElementById("programming").value);
+
+    let datascience =
+        Number(document.getElementById("datascience").value);
+
+    let cloud =
+        Number(document.getElementById("cloud").value);
+
+    let os =
+        Number(document.getElementById("os").value);
+
+
+    let marks = [
+
+        english,
+        maths,
+        physics,
+        chemistry,
+        programming,
+        datascience,
+        cloud,
+        os
+
+    ];
+
+
+    /* CHECK MARKS */
+
+    for(let mark of marks){
+
+        if(mark < 0 || mark > 100){
+
+            alert(
+                "Each subject mark must be between 0 and 100"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    /* TOTAL */
+
+    let total =
+
+        english +
+        maths +
+        physics +
+        chemistry +
+        programming +
+        datascience +
+        cloud +
+        os;
+
+
+    /* AVERAGE */
+
+    let average = total / 8;
+
+
+    /* PERCENTAGE */
+
+    let percentage = (total / 800) * 100;
+
+
+    /* GRADE */
+
+    let grade;
+
+
+    if(percentage >= 90){
+
+        grade = "A+";
+
+    }
+
+    else if(percentage >= 80){
+
+        grade = "A";
+
+    }
+
+    else if(percentage >= 70){
+
+        grade = "B+";
+
+    }
+
+    else if(percentage >= 60){
+
+        grade = "B";
+
+    }
+
+    else if(percentage >= 50){
+
+        grade = "C";
+
+    }
+
+    else if(percentage >= 40){
+
+        grade = "D";
+
+    }
+
+    else{
+
+        grade = "F";
+
+    }
+
+
+    /* PASS / FAIL */
+
+    let status;
+
+
+    if(
+        english >= 40 &&
+        maths >= 40 &&
+        physics >= 40 &&
+        chemistry >= 40 &&
+        programming >= 40 &&
+        datascience >= 40 &&
+        cloud >= 40 &&
+        os >= 40
+    ){
+
+        status = "PASS";
+
+    }
+
+    else{
+
+        status = "FAIL";
+
+    }
+
+
+    /* PERFORMANCE */
+
+    let performance;
+
+
+    if(status === "FAIL"){
+
+        performance = "Needs Improvement";
+
+    }
+
+    else if(percentage >= 90){
+
+        performance = "Outstanding";
+
+    }
+
+    else if(percentage >= 80){
+
+        performance = "Excellent";
+
+    }
+
+    else if(percentage >= 70){
+
+        performance = "Very Good";
+
+    }
+
+    else if(percentage >= 60){
+
+        performance = "Good";
+
+    }
+
+    else if(percentage >= 50){
+
+        performance = "Average";
+
+    }
+
+    else{
+
+        performance = "Pass";
+
+    }
+
+
+    /* DISPLAY RESULT */
+
+    document.getElementById("total").innerHTML =
+        total + " / 800";
+
+    document.getElementById("average").innerHTML =
+        average.toFixed(2);
+
+    document.getElementById("percentage").innerHTML =
+        percentage.toFixed(2) + "%";
+
+    document.getElementById("grade").innerHTML =
+        grade;
+
+    document.getElementById("status").innerHTML =
+        status;
+
+    document.getElementById("performance").innerHTML =
+        performance;
+
+
+    /* STUDENT OBJECT */
+
+    let student = {
+
+        name:name,
+
+        regno:regno,
+
+        department:department,
+
+        semester:semester,
+
+        total:total,
+
+        average:average,
+
+        percentage:percentage,
+
+        grade:grade,
+
+        status:status,
+
+        performance:performance
+
+    };
+
+
+    students.push(student);
+
+
+    calculateRanks();
+
+    displayStudents();
+
+}
+
+
+/* RANK */
+
+function calculateRanks(){
+
+    students.sort(function(a,b){
+
+        return b.percentage - a.percentage;
+
+    });
+
+
+    for(
+        let i = 0;
+        i < students.length;
+        i++
+    ){
+
+        students[i].rank = i + 1;
+
+    }
+
+
+    if(students.length > 0){
+
+        document.getElementById("rank").innerHTML =
+            students[students.length - 1].rank;
+
+    }
+
+}
+
+
+/* DISPLAY RECORDS */
+
+function displayStudents(){
+
+    let table =
+        document.getElementById("tableBody");
+
+    table.innerHTML = "";
+
+
+    students.forEach(
+        function(student,index){
+
+            let row =
+                table.insertRow();
+
+
+            row.innerHTML = `
+
+            <td>${student.name}</td>
+
+            <td>${student.regno}</td>
+
+            <td>${student.department}</td>
+
+            <td>${student.total}/800</td>
+
+            <td>${student.average.toFixed(2)}</td>
+
+            <td>${student.percentage.toFixed(2)}%</td>
+
+            <td class="grade">
+                ${student.grade}
+            </td>
+
+            <td>${student.rank}</td>
+
+            <td>${student.status}</td>
+
+            <td>${student.performance}</td>
+
+            <td>
+
+            <button
+            class="delete"
+            onclick="deleteStudent(${index})">
+
+            Delete
+
+            </button>
+
+            </td>
+
+            `;
+
+        }
+    );
+
+}
+
+
+/* DELETE */
+
+function deleteStudent(index){
+
+    students.splice(index,1);
+
+    calculateRanks();
+
+    displayStudents();
+
+}
+
+
+/* SEARCH */
+
+function searchStudent(){
+
+    let search =
+
+        document.getElementById("search")
+        .value
+        .toLowerCase();
+
+
+    let rows =
+
+        document
+        .getElementById("tableBody")
+        .getElementsByTagName("tr");
+
+
+    for(let row of rows){
+
+        let text =
+            row.innerText.toLowerCase();
+
+
+        if(text.includes(search)){
+
+            row.style.display = "";
+
+        }
+
+        else{
+
+            row.style.display = "none";
+
+        }
+
+    }
+
+}
+
+
+/* CLEAR FORM */
+
+function clearForm(){
+
+    document
+    .querySelectorAll(
+        ".form input"
+    )
+    .forEach(
+        input => input.value = ""
+    );
+
+
+    document.getElementById("semester")
+    .value = "";
+
+
+    document.getElementById("total")
+    .innerHTML = "0 / 800";
+
+    document.getElementById("average")
+    .innerHTML = "0";
+
+    document.getElementById("percentage")
+    .innerHTML = "0%";
+
+    document.getElementById("grade")
+    .innerHTML = "-";
+
+    document.getElementById("status")
+    .innerHTML = "-";
+
+    document.getElementById("performance")
+    .innerHTML = "-";
+
+    document.getElementById("rank")
+    .innerHTML = "-";
+
+}
+
+</script>
+
+</body>
+</html>
